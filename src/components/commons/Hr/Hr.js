@@ -6,7 +6,8 @@ const Hr = () => {
         <View
             style={{
                 borderBottomColor: 'lightgray',
-                borderBottomWidth: 2,
+                borderBottomWidth: 1,
+                marginBottom: 15
             }}
         />
     );

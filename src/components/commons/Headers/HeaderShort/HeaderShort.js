@@ -7,7 +7,7 @@ const logo = require('../../../../assets/images/logo-main.png')
 
 const styles = StyleSheet.create({
     headerLogin: {
-        flex: 0.35,
+        flex: 0.15,
         width: '100%',
         backgroundColor: 'red',
         alignItems: 'center',
@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
 });
 
 
-const HeaderLarge = () => {
+const HeaderShort = () => {
     return (
         <View style={styles.headerLogin}>
             <ImageBackground source={image} style={styles.image}>
@@ -37,4 +37,4 @@ const HeaderLarge = () => {
     );
 };
 
-export default HeaderLarge;
+export default HeaderShort;

@@ -1,24 +1,25 @@
 import React from 'react';
-import {View, Text, TextInput, Button, StyleSheet} from 'react-native';
-import {Link} from "react-router-native";
+import {StyleSheet, View} from 'react-native';
 import Hr from "../../commons/Hr/Hr";
 import HeaderLarge from "../../commons/Headers/HeaderLarge/HeaderLarge";
+import Title from "../../commons/Title/Title";
+import FormLogin from "./FormLogin/FormLogin";
+import RecoverPassword from "./RecoverPassword/RecoverPassword";
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#f5f5dc',
+        backgroundColor: '#fff',
         alignItems: 'center',
     },
     bodyLogin: {
-        flex: 0.7,
+        flex: 0.75,
         width: '100%',
-        padding: 40,
-        paddingRight: 40,
-        paddingTop: 50
+        paddingLeft: 40,
+        paddingRight: 40
     },
     title: {
-        alignItems: 'center'
+        flex: 0.3,
     }
 });
 
@@ -28,25 +29,14 @@ class Login extends React.Component {
             <View style={styles.container}>
                 <HeaderLarge/>
                 <View style={styles.bodyLogin}>
-                    <View style={styles.title}>
-                        <Text>INICIAR SESIÓN</Text>
-                    </View>
-                    <TextInput placeholder={'hola'}/>
-                    <TextInput placeholder={'hola'}/>
-                    <Button title={'hello'}/>
-                    <View>
-                        <Text>Recordar cuenta</Text>
-                        <Button title={'select'}/>
-                    </View>
+                    <Title flex={styles.title}>
+                        INICIAR SESIÓN
+                    </Title>
+                    <FormLogin
+                        navigation={this.props.navigation}
+                    />
                     <Hr/>
-                    <View>
-                        <Text>¿Olvidaste la contraseña?</Text>
-                        <Link to={'/recover-password'}>
-                            <Text>
-                                Recuperala aquí
-                            </Text>
-                        </Link>
-                    </View>
+                    <RecoverPassword/>
                 </View>
             </View>
         );
