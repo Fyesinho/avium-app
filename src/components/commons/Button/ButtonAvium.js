@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from "react-native";
-import {primaryColor, secondaryColor, titleFontBond} from "../../../utils/const/style";
+import {disabledColor, primaryColor, secondaryColor, titleFontBond} from "../../../utils/const/style";
 import {useFonts} from "@use-expo/font";
 
 const styles = StyleSheet.create({
@@ -36,6 +36,18 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: 'transparent'
     },
+    disabled: {
+        backgroundColor: secondaryColor,
+        borderRadius: 5,
+        borderWidth: 1,
+        borderColor: disabledColor
+    },
+    disabledText: {
+        color: disabledColor,
+        fontSize: 25,
+        borderWidth: 1,
+        borderColor: 'transparent'
+    },
     viewSpace: {
         flex: 0.2,
         borderWidth: 1,
@@ -53,8 +65,25 @@ const ButtonAvium = ({onPress, children, icon, type, disabled}) => {
             </Text>
         </View>;
     }
-    let typeStyleText = type === 'secondary' ? styles.secondaryText : styles.primaryText;
-    let typeStyleButton = type === 'secondary' ? styles.secondary : styles.primary;
+    let typeStyleText;
+    let typeStyleButton;
+    switch (type) {
+        case 'disabled': {
+            typeStyleText = styles.disabledText;
+            typeStyleButton = styles.disabled;
+            break;
+        }
+        case 'secondary': {
+            typeStyleText = styles.secondaryText;
+            typeStyleButton = styles.secondary;
+            break;
+        }
+        default: {
+            typeStyleText = styles.primaryText;
+            typeStyleButton = styles.primary;
+            break;
+        }
+    }
     return (
         <View style={styles.buttonView}>
             <TouchableOpacity style={{...styles.button, ...typeStyleButton}} onPress={onPress} disabled={disabled}>

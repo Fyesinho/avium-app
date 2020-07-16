@@ -1,5 +1,6 @@
 export const primaryColor = "#b9004c"
 export const secondaryColor = "#fff"
+export const disabledColor = "#888888"
 
 export const titleFont = {
     'Title': require('../../assets/fonts/BebasNeue-Book.ttf'),

@@ -10,7 +10,7 @@ import ShowVisit from "./src/components/views/ShowVisit/ShowVisit";
 import SyncVisit from "./src/components/views/SyncVisit/SyncVisit";
 import AllVisits from "./src/components/views/AllVisits/AllVisits";
 import Menu from "./src/components/views/Menu/Menu";
-import EditVisit from "./src/components/views/EditVisit/Editvisit";
+import EditVisit from "./src/components/views/EditVisit/EditVisit";
 
 const Stack = createStackNavigator();
 
