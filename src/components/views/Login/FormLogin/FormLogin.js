@@ -1,19 +1,22 @@
 import React, {useState} from 'react';
+import {connect} from "react-redux";
 import InputText from "../../../commons/Inputs/InputText/InputText";
 import ButtonAvium from "../../../commons/Button/ButtonAvium";
 import RememberAccount from "../RememberAccount/RememberAccount";
 import {FontAwesome5} from '@expo/vector-icons';
 import {validateEmail} from "../../../../utils/const/functions";
+import {login} from "../../../../state/user/actions";
 
 const icon = <FontAwesome5 name="door-open" size={20} color="white"/>;
 
-const FormLogin = ({navigation}) => {
+const FormLogin = ({navigation, getLogin}) => {
     const [isSubmit, setIsSubmit] = useState(false);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
     const login = () => {
         setIsSubmit(true);
+        getLogin({email, password});
     }
 
     if (isSubmit) {
@@ -50,4 +53,8 @@ const FormLogin = ({navigation}) => {
     );
 };
 
-export default FormLogin;
+const mapDispatchToProps = dispatch => ({
+   getLogin: payload => dispatch(login(payload))
+});
+
+export default connect(null, mapDispatchToProps)(FormLogin);

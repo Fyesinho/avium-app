@@ -1,5 +1,6 @@
 import React from 'react';
 import {Image, StyleSheet, Text, View} from 'react-native';
+import {connect} from 'react-redux';
 import HeaderLarge from "../../commons/Headers/HeaderLarge/HeaderLarge";
 import ButtonAvium from "../../commons/Button/ButtonAvium";
 import {useFonts} from "@use-expo/font";
@@ -49,7 +50,7 @@ const styles = StyleSheet.create({
     }
 });
 
-const Home = ({navigation}) => {
+const Home = ({navigation, user}) => {
     let [fontsLoaded] = useFonts(textBold);
     if (!fontsLoaded) {
         return <View>
@@ -58,7 +59,6 @@ const Home = ({navigation}) => {
             </Text>
         </View>;
     }
-
     const iconAdd = <MaterialCommunityIcons name="file-document-box-plus" size={20} color="white" />;
     const iconSearch = <MaterialCommunityIcons name="file-document-box-search" size={20} color="white" />;
 
@@ -74,10 +74,10 @@ const Home = ({navigation}) => {
                         }}
                     />
                     <Text style={styles.textName}>
-                        Rodrigo Gonzalez
+                        {user.name}
                     </Text>
                     <Text style={styles.textJob}>
-                        Supervisor
+                        {user.email}
                     </Text>
                 </View>
                 <View style={styles.viewButtons}>
@@ -94,4 +94,8 @@ const Home = ({navigation}) => {
     );
 }
 
-export default Home;
+const mapStateToProps = ({user}) => ({
+    user: user.userData
+})
+
+export default connect(mapStateToProps)(Home);

@@ -1,4 +1,5 @@
 import React from 'react';
+import {Provider} from 'react-redux';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {StatusBar} from "react-native";
@@ -12,11 +13,13 @@ import AllVisits from "./src/components/views/AllVisits/AllVisits";
 import Menu from "./src/components/views/Menu/Menu";
 import EditVisit from "./src/components/views/EditVisit/EditVisit";
 
+import store from './src/state/store';
+
 const Stack = createStackNavigator();
 
 export default function App() {
     return (
-        <>
+        <Provider store={store}>
             <StatusBar hidden={true}/>
             <NavigationContainer>
                 <Stack.Navigator initialRouteName="Login" screenOptions={{headerShown: false}}>
@@ -30,7 +33,7 @@ export default function App() {
                     <Stack.Screen name="Menu" component={Menu}/>
                 </Stack.Navigator>
             </NavigationContainer>
-        </>
+        </Provider>
     );
 }
 
