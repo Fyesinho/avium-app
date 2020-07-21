@@ -1,8 +1,10 @@
 import React from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Image, StyleSheet, Text, TouchableOpacity, View, Dimensions} from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import {useFonts} from "@use-expo/font";
 import {textRegular} from "../../../../utils/const/style";
+
+const win = Dimensions.get('window');
 
 const styles = StyleSheet.create({
     container: {
@@ -34,20 +36,29 @@ const styles = StyleSheet.create({
         fontFamily: 'Regular-text',
         fontSize: 12,
         textTransform: 'uppercase'
-    }
+    },
+    thumbnail: {
+        width: win.width - 80,
+        height: 100,
+        resizeMode: 'cover',
+        borderRadius: 5,
+        borderWidth: 1,
+        borderColor: '#ACACAC',
+    },
 });
 
-const InputImage = ({label}) => {
+const InputImage = ({label, value, onChangeImage}) => {
     let openImagePickerAsync = async () => {
         let permissionResult = await ImagePicker.requestCameraRollPermissionsAsync();
-
         if (permissionResult.granted === false) {
-            alert("Permission to access camera roll is required!");
+            alert("Es necesario otorgar permiso para la galería");
             return;
         }
-
         let pickerResult = await ImagePicker.launchImageLibraryAsync();
-        console.log(pickerResult);
+        if (pickerResult.cancelled === true) {
+            return;
+        }
+        onChangeImage(pickerResult.uri);
     }
 
     let [fontsLoaded] = useFonts(textRegular);
@@ -65,7 +76,13 @@ const InputImage = ({label}) => {
                 <Text style={styles.label}>{label}</Text>
             </View>
             <TouchableOpacity onPress={openImagePickerAsync} style={styles.button}>
-                <Text style={styles.buttonText}>+</Text>
+                {
+                    value !== '' ?
+                        <View style={styles.container}>
+                            <Image source={{uri: value}} style={styles.thumbnail}/>
+                        </View> :
+                        <Text style={styles.buttonText}>+</Text>
+                }
             </TouchableOpacity>
         </View>
     );

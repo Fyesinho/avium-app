@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
     }
 });
 
-const InputSelect = ({placeholder, label, onValueChange, items}) => {
+const InputSelect = ({placeholder, label, onValueChange, items, value}) => {
     let [fontsLoaded] = useFonts(textRegular);
     let [fontsLoaded2] = useFonts(textItalic);
     if (!fontsLoaded || !fontsLoaded2) {
@@ -58,7 +58,7 @@ const InputSelect = ({placeholder, label, onValueChange, items}) => {
             </View>
             <View style={styles.viewPicker}>
                 <Picker
-                    selectedValue={0}
+                    selectedValue={value}
                     mode="dropdown"
                     placeholder={'test'}
                     style={styles.picker}

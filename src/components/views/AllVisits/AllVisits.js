@@ -1,4 +1,5 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
+import AsyncStorage from "@react-native-community/async-storage";
 import {ScrollView, StyleSheet, View} from "react-native";
 import HeaderShort from "../../commons/Headers/HeaderShort/HeaderShort";
 import Title from "../../commons/Title/Title";
@@ -22,6 +23,22 @@ const styles = StyleSheet.create({
 });
 
 const AllVisits = () => {
+    let [noSyncList, setNoSyncList] = useState([]);
+    useEffect(() => {
+        (async function() {
+            // AsyncStorage.clear()
+            try {
+                const keys = await AsyncStorage.getAllKeys();
+                const filterKeys = keys.filter(key => key.includes('visit'));
+                const result = await AsyncStorage.multiGet(filterKeys);
+                const response = result.map((result, i, store) => ({...JSON.parse(store[i][1])}))
+                setNoSyncList(response)
+            } catch (e) {
+                console.error(e);
+            }
+        })();
+    }, [])
+
     return (
         <ScrollView style={styles.container}>
             <HeaderShort/>
@@ -29,7 +46,7 @@ const AllVisits = () => {
                 <Title flex={styles.title}>
                     TODAS MIS VISITAS
                 </Title>
-                <Filter/>
+                <Filter noSyncList={noSyncList}/>
             </View>
         </ScrollView>
     );

@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
     }
 });
 
-const InputTextArea = ({placeholder, label}) => {
+const InputTextArea = ({placeholder, label, onChangeText, value}) => {
     let [fontsLoaded] = useFonts(textRegular);
     if (!fontsLoaded) {
         return <View>
@@ -46,7 +46,9 @@ const InputTextArea = ({placeholder, label}) => {
             </View>
             <TextInput
                 multiline={true}
+                value={value}
                 numberOfLines={7}
+                onChangeText={text => onChangeText(text)}
                 style={{...styles.input, fontFamily: 'Regular-text'}}
                 placeholder={placeholder}/>
         </View>

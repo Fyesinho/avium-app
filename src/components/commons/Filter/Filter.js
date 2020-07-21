@@ -56,7 +56,7 @@ const style = StyleSheet.create({
     },
 })
 
-const Filter = () => {
+const Filter = ({noSyncList}) => {
     let [fontsLoaded] = useFonts(titleFontBond);
     if (!fontsLoaded) {
         return <View>
@@ -79,10 +79,11 @@ const Filter = () => {
                 </TouchableOpacity>
             </View>
             <View style={{paddingTop: 15}}>
-                <VisitList/>
-                <VisitList/>
-                <VisitList/>
-                <VisitList/>
+                {
+                    noSyncList && noSyncList.map((visit, index) => {
+                        return <VisitList key={index} visit={visit}/>
+                    })
+                }
             </View>
         </View>
     );

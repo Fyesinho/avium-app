@@ -22,7 +22,7 @@ export default function App() {
         <Provider store={store}>
             <StatusBar hidden={true}/>
             <NavigationContainer>
-                <Stack.Navigator initialRouteName="Login" screenOptions={{headerShown: false}}>
+                <Stack.Navigator initialRouteName="AllVisits" screenOptions={{headerShown: false}}>
                     <Stack.Screen name="Login" component={Login}/>
                     <Stack.Screen name="Home" component={Home}/>
                     <Stack.Screen name="AddVisit" component={AddVisit}/>

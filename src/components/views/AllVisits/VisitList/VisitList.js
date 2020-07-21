@@ -1,11 +1,11 @@
 import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {useFonts} from "@use-expo/font";
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 
 import ButtonAviumList from "../../../commons/ButtonList/ButtonAviumList";
-import {secondaryColor, textBold, textRegular} from "../../../../utils/const/style";
-import {AntDesign} from "@expo/vector-icons";
+import {textBold, textRegular} from "../../../../utils/const/style";
+import {MaterialIcons} from "@expo/vector-icons";
 import Hr from "../../../commons/Hr/Hr";
 
 const style = StyleSheet.create({
@@ -30,6 +30,7 @@ const style = StyleSheet.create({
     secondRowText: {
         fontFamily: 'Bold-text',
         fontSize: 12,
+        paddingLeft: 5,
         color: '#444444'
     },
     secondRow: {
@@ -50,9 +51,10 @@ const style = StyleSheet.create({
     }
 });
 
-const iconSync = <AntDesign name="sync" size={12} color={'green'} />;
+const iconSync = <MaterialIcons name="sync" size={12} color="green" />;
+const iconNoSync = <MaterialIcons name="sync-disabled" size={12} color="red" />;
 
-const VisitList = () => {
+const VisitList = ({visit}) => {
     let [fontsLoaded] = useFonts(textRegular);
     let [fontsLoaded2] = useFonts(textBold);
     const navigation = useNavigation();
@@ -63,22 +65,23 @@ const VisitList = () => {
             </Text>
         </View>;
     }
+    const date = new Date(visit.id).toLocaleDateString("en-US")
     return (
         <View style={style.container}>
             <View style={style.firstRow}>
-                <View>{iconSync}</View>
-                <View><Text style={style.firstRowText}>Productor 2</Text></View>
+                <View>{visit.state ? iconSync : iconNoSync}</View>
+                <View><Text style={style.firstRowText}>{visit.producer && visit.producer.label}</Text></View>
             </View>
             <View style={style.secondRow}>
                 <View style={style.date}>
                     <Text style={style.secondRowTitle}>FECHA VISITA:</Text>
-                    <Text style={style.secondRowText}>30/06/2020</Text>
+                    <Text style={style.secondRowText}>{date}</Text>
                 </View>
                 <View style={style.buttons}>
-                    <ButtonAviumList type={'secondary'} onPress={() => navigation.navigate('EditVisit')}>
+                    <ButtonAviumList type={'secondary'} onPress={() => navigation.navigate('EditVisit', {id: visit.id})}>
                         Editar
                     </ButtonAviumList>
-                    <ButtonAviumList onPress={() => navigation.navigate('ShowVisit', {isSyncr: false})} >
+                    <ButtonAviumList onPress={() => navigation.navigate('ShowVisit', {isSyncr: visit.isSync, id: visit.id})}>
                         Ver
                     </ButtonAviumList>
                 </View>

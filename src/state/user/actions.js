@@ -4,7 +4,6 @@ import {getUser} from "../../server/user";
 
 
 export const login = payload => {
-    console.log(payload)
     return async dispatch => {
         dispatch({type: LOGIN_USER_INIT});
         const loginSuccess = response => {
