@@ -1,8 +1,10 @@
 import React from 'react';
 import {StyleSheet, Text, View} from "react-native";
-import {textRegular, textLight} from "../../../../utils/const/style";
+import {textLight, textRegular} from "../../../../utils/const/style";
 import {useFonts} from "@use-expo/font";
-// import {Link} from "react-router-native";
+import Loading from "../../Loading/Loading";
+import * as Linking from 'expo-linking';
+
 
 const styles = StyleSheet.create({
     view: {
@@ -25,23 +27,21 @@ const styles = StyleSheet.create({
 
 
 const RecoverPassword = () => {
+    const handlerOnPres = () => {
+        Linking.openURL('http://avium.agromarketing.cl/admin/password/reset');
+    }
+
     let [fontsLoaded] = useFonts(textRegular);
     let [fontsLoaded2] = useFonts(textLight);
     if (!fontsLoaded || !fontsLoaded2) {
-        return <View>
-            <Text>
-                Cargando...
-            </Text>
-        </View>;
+        return <Loading/>;
     }
     return (
         <View style={styles.view}>
             <Text style={{...styles.text, fontFamily: 'Light-text'}}>¿Olvidaste la contraseña?</Text>
-            {/*<Link to={'/recover-password'}>*/}
-                <Text style={{...styles.link, fontFamily: 'Regular-text' }}>
-                    Recuperala aquí
-                </Text>
-            {/*</Link>*/}
+            <Text style={{...styles.link, fontFamily: 'Regular-text'}} onPress={() => handlerOnPres()}>
+                Recuperala aquí
+            </Text>
         </View>
     );
 };

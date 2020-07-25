@@ -14,6 +14,7 @@ import Menu from "./src/components/views/Menu/Menu";
 import EditVisit from "./src/components/views/EditVisit/EditVisit";
 
 import store from './src/state/store';
+import AsyncStorage from "@react-native-community/async-storage";
 
 const Stack = createStackNavigator();
 
@@ -22,7 +23,7 @@ export default function App() {
         <Provider store={store}>
             <StatusBar hidden={true}/>
             <NavigationContainer>
-                <Stack.Navigator initialRouteName="AllVisits" screenOptions={{headerShown: false}}>
+                <Stack.Navigator initialRouteName={'Login'} screenOptions={{headerShown: false}}>
                     <Stack.Screen name="Login" component={Login}/>
                     <Stack.Screen name="Home" component={Home}/>
                     <Stack.Screen name="AddVisit" component={AddVisit}/>

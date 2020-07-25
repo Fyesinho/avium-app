@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import {connect} from 'react-redux';
 import {ScrollView, StyleSheet, View} from 'react-native';
 import {AntDesign, MaterialIcons} from '@expo/vector-icons';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -9,6 +10,7 @@ import InputDisabled from "../../commons/Inputs/InputDisabled/InputDisabled";
 import InputImageDisabled from "../../commons/Inputs/InputImageDisabled/InputImageDisabled";
 import ButtonAvium from "../../commons/Button/ButtonAvium";
 import {primaryColor, secondaryColor} from "../../../utils/const/style";
+import {postVisit} from "../../../state/visit/actions";
 
 const styles = StyleSheet.create({
     container: {
@@ -65,6 +67,16 @@ class ShowVisit extends Component {
         }
     }
 
+    handlerOnSync = async () => {
+        const id = this.props.route.params && this.props.route.params.id;
+        try {
+            await this.props.postVisit(this.state.visit, id)
+            this.props.navigation.navigate('SyncVisit')
+        } catch (e) {
+            console.log(e)
+        }
+    }
+
     render() {
         const {visit} = this.state;
         return (
@@ -88,13 +100,14 @@ class ShowVisit extends Component {
                             })
                         }
                         {!this.props.route.params.isSyncr && <View style={{paddingBottom: 20}}>
-                            <ButtonAvium type={'secondary'} onPress={() => this.props.navigation.navigate('EditVisit', {id: visit.id})}
+                            <ButtonAvium type={'secondary'}
+                                         onPress={() => this.props.navigation.navigate('EditVisit', {id: visit.id})}
                                          icon={iconEdit}>
                                 editar visita
                             </ButtonAvium>
                         </View>}
                         {!this.props.route.params.isSyncr &&
-                        <ButtonAvium onPress={() => this.props.navigation.navigate('SyncVisit')} icon={iconSync}>
+                        <ButtonAvium onPress={this.handlerOnSync} icon={iconSync}>
                             sincronizar visita
                         </ButtonAvium>}
                     </View>
@@ -104,4 +117,8 @@ class ShowVisit extends Component {
     }
 }
 
-export default ShowVisit;
+const mapDispatchToProps = dispatch => ({
+    postVisit: payload => dispatch(postVisit(payload))
+});
+
+export default connect(null, mapDispatchToProps)(ShowVisit);

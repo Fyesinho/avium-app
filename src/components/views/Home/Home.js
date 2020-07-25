@@ -6,6 +6,7 @@ import ButtonAvium from "../../commons/Button/ButtonAvium";
 import {useFonts} from "@use-expo/font";
 import {textBold, textRegular} from "../../../utils/const/style";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import Loading from "../Loading/Loading";
 
 const styles = StyleSheet.create({
     container: {
@@ -41,23 +42,21 @@ const styles = StyleSheet.create({
     textName: {
         fontFamily: 'Bold-text',
         fontSize: 16,
-        color: '#444444'
+        color: '#444444',
+        paddingTop: 5
     },
     textJob: {
         fontFamily: 'Regular-text',
         fontSize: 16,
-        color: '#A9A9A9'
+        color: '#A9A9A9',
+        paddingTop: 3
     }
 });
 
 const Home = ({navigation, user}) => {
     let [fontsLoaded] = useFonts(textBold);
     if (!fontsLoaded) {
-        return <View>
-            <Text>
-                Cargando...
-            </Text>
-        </View>;
+        return <Loading/>
     }
     const iconAdd = <MaterialCommunityIcons name="file-document-box-plus" size={20} color="white" />;
     const iconSearch = <MaterialCommunityIcons name="file-document-box-search" size={20} color="white" />;
@@ -70,14 +69,14 @@ const Home = ({navigation, user}) => {
                     <Image
                         style={styles.tinyLogo}
                         source={{
-                            uri: 'https://reactnative.dev/img/tiny_logo.png',
+                            uri: user.image,
                         }}
                     />
                     <Text style={styles.textName}>
                         {user.name}
                     </Text>
                     <Text style={styles.textJob}>
-                        {user.email}
+                        {user.position}
                     </Text>
                 </View>
                 <View style={styles.viewButtons}>
@@ -88,7 +87,6 @@ const Home = ({navigation, user}) => {
                         Ver mis visitas
                     </ButtonAvium>
                 </View>
-
             </View>
         </View>
     );

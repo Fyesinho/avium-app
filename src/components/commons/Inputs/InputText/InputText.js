@@ -2,6 +2,7 @@ import React from 'react';
 import {StyleSheet, Text, TextInput, View} from "react-native";
 import {useFonts} from '@use-expo/font';
 import {textRegular} from "../../../../utils/const/style";
+import Loading from "../../../views/Loading/Loading";
 
 
 const styles = StyleSheet.create({
@@ -22,11 +23,7 @@ const styles = StyleSheet.create({
 const InputText = ({placeholder, ...props}) => {
     let [fontsLoaded] = useFonts(textRegular);
     if (!fontsLoaded) {
-        return <View>
-            <Text>
-                Cargando...
-            </Text>
-        </View>;
+        return <Loading/>;
     }
     return (
         <View style={styles.inputView}>

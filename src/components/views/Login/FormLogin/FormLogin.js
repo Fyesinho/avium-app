@@ -6,24 +6,27 @@ import RememberAccount from "../RememberAccount/RememberAccount";
 import {FontAwesome5} from '@expo/vector-icons';
 import {validateEmail} from "../../../../utils/const/functions";
 import {login} from "../../../../state/user/actions";
+import AsyncStorage from "@react-native-community/async-storage";
 
 const icon = <FontAwesome5 name="door-open" size={20} color="white"/>;
 
-const FormLogin = ({navigation, getLogin}) => {
-    const [isSubmit, setIsSubmit] = useState(false);
+const FormLogin = ({navigation, getLogin, user}) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [rememberAccount, setRememberAccount] = useState(false)
 
-    const login = () => {
-        setIsSubmit(true);
-        getLogin({email, password});
+    const login = async () => {
+        const response = await getLogin({email, password});
+        if (!response) {
+            alert('Las credenciales no son correctas, por favor intente nuevamente.')
+        } else {
+            if (rememberAccount) {
+                await AsyncStorage.setItem(`@user`, JSON.stringify(response))
+            }
+            navigation.navigate('Home');
+        }
     }
-
-    if (isSubmit) {
-        navigation.navigate('Home');
-        setIsSubmit(false);
-    }
-
+    console.log(rememberAccount)
     return (
         <>
             <InputText
@@ -31,7 +34,7 @@ const FormLogin = ({navigation, getLogin}) => {
                 autoCompleteType={'email'}
                 keyboardType={'email-address'}
                 placeholder={'correo@correo.cl'}
-                autoCapitalize = 'none'
+                autoCapitalize='none'
                 onChangeText={email => setEmail(email)}
             />
             <InputText
@@ -40,7 +43,6 @@ const FormLogin = ({navigation, getLogin}) => {
                 onChangeText={password => setPassword(password)}
                 secureTextEntry={true}
             />
-
             <ButtonAvium
                 disabled={!validateEmail(email) || password.length < 6}
                 type={!validateEmail(email) || password.length < 6 ? 'disabled' : ''}
@@ -48,13 +50,17 @@ const FormLogin = ({navigation, getLogin}) => {
                 onPress={() => login()}>
                 INICIAR SESIÓN
             </ButtonAvium>
-            <RememberAccount/>
+            <RememberAccount isEnabled={rememberAccount} setIsEnabled={setRememberAccount}/>
         </>
     );
 };
 
+const mapStateToProps = state => ({
+    user: state.user
+})
+
 const mapDispatchToProps = dispatch => ({
-   getLogin: payload => dispatch(login(payload))
+    getLogin: payload => dispatch(login(payload))
 });
 
-export default connect(null, mapDispatchToProps)(FormLogin);
+export default connect(mapStateToProps, mapDispatchToProps)(FormLogin);

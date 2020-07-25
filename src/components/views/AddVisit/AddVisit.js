@@ -1,6 +1,7 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
+import {connect} from 'react-redux';
 
 import HeaderShort from "../../commons/Headers/HeaderShort/HeaderShort";
 import Title from "../../commons/Title/Title";
@@ -31,7 +32,7 @@ const styles = StyleSheet.create({
 
 const iconAdd = <MaterialCommunityIcons name="file-document-box-plus" size={20} color="white"/>;
 
-const AddVisit = ({navigation}) => {
+const AddVisit = ({navigation, optionsProducer}) => {
     const initialLabor = {
         labor: -1,
         comment: '',
@@ -41,12 +42,6 @@ const AddVisit = ({navigation}) => {
     const [field, setField] = useState(-1);
     const [quarter, setQuarter] = useState(-1);
     const [labors, setLabors] = useState([initialLabor]);
-
-    const optionsProducer = [
-        {label: 'Productor 1', value: 1},
-        {label: 'Productor 2', value: 2},
-        {label: 'Productor 3', value: 3},
-    ]
 
     const optionField = [
         {label: 'Campo 1', value: 1},
@@ -183,4 +178,8 @@ const AddVisit = ({navigation}) => {
     );
 }
 
-export default AddVisit;
+const mapStateToProps = state => ({
+    optionsProducer: state.producers.producersData
+});
+
+export default connect(mapStateToProps)(AddVisit);

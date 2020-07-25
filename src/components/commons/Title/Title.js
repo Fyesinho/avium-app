@@ -2,6 +2,7 @@ import React from 'react';
 import {StyleSheet, Text, View} from "react-native";
 import {useFonts} from '@use-expo/font';
 import {titleFont} from "../../../utils/const/style";
+import Loading from "../../views/Loading/Loading";
 
 const styles = StyleSheet.create({
     title: {
@@ -17,11 +18,7 @@ const styles = StyleSheet.create({
 const Title = ({children, flex}) => {
     let [fontsLoaded] = useFonts(titleFont);
     if (!fontsLoaded) {
-        return <View>
-            <Text>
-                Cargando...
-            </Text>
-        </View>;
+        return <Loading/>;
     }
     return (
         <View style={{...flex, ...styles.title}}>
