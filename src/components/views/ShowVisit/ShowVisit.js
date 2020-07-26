@@ -10,7 +10,8 @@ import InputDisabled from "../../commons/Inputs/InputDisabled/InputDisabled";
 import InputImageDisabled from "../../commons/Inputs/InputImageDisabled/InputImageDisabled";
 import ButtonAvium from "../../commons/Button/ButtonAvium";
 import {primaryColor, secondaryColor} from "../../../utils/const/style";
-import {postVisit} from "../../../state/visit/actions";
+import {getVisit, postVisit} from "../../../state/visit/actions";
+import {reducerCurrentVisit} from "../../../state/visit/reducerFunction";
 
 const styles = StyleSheet.create({
     container: {
@@ -48,20 +49,26 @@ const iconSync = <AntDesign name="sync" size={15} color={secondaryColor}/>;
 const iconEdit = <MaterialIcons name="edit" size={18} color={primaryColor}/>;
 
 class ShowVisit extends Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            visit: {}
-        };
+    state = {
+        visit: {}
     }
 
     async componentDidMount() {
         const id = this.props.route.params && this.props.route.params.id;
+        const isSyncr = this.props.route.params && this.props.route.params.isSyncr;
         try {
-            const value = await AsyncStorage.getItem(`@visit-${id}`)
-            this.setState({
-                visit: JSON.parse(value)
-            })
+            if (isSyncr) {
+                const idRemote = this.props.route.params && this.props.route.params.idRemote;
+                const response = await this.props.getVisit(idRemote);
+                this.setState({
+                    visit: reducerCurrentVisit(response)
+                })
+            } else {
+                const value = await AsyncStorage.getItem(`@visit-${id}`)
+                this.setState({
+                    visit: JSON.parse(value)
+                })
+            }
         } catch (e) {
             // error reading value
         }
@@ -71,6 +78,7 @@ class ShowVisit extends Component {
         const id = this.props.route.params && this.props.route.params.id;
         try {
             await this.props.postVisit(this.state.visit, id)
+            await AsyncStorage.removeItem(`@visit-${id}`);
             this.props.navigation.navigate('SyncVisit')
         } catch (e) {
             console.log(e)
@@ -79,46 +87,50 @@ class ShowVisit extends Component {
 
     render() {
         const {visit} = this.state;
-        return (
-            <ScrollView style={styles.container}>
-                <HeaderShort/>
-                <View style={styles.body}>
-                    <Title flex={styles.title}>
-                        DETALLE VISITA
-                    </Title>
-                    <View style={styles.form}>
-                        <InputDisabled label={'Productor'} value={visit.producer && visit.producer.label}/>
-                        <InputDisabled label={'Campo'} value={visit.field && visit.field.label}/>
-                        <InputDisabled label={'Cuartel'} value={visit.quarter && visit.quarter.label}/>
-                        {
-                            visit.labors && visit.labors.map((labor, index) => {
-                                return <View key={index}>
-                                    <InputDisabled label={'Labor'} value={labor.labor && labor.labor.label}/>
-                                    <InputDisabled label={'Comentarios'} value={labor.comment}/>
-                                    <InputImageDisabled label={'Imagen labor'} uri={labor.image}/>
-                                </View>
-                            })
-                        }
-                        {!this.props.route.params.isSyncr && <View style={{paddingBottom: 20}}>
-                            <ButtonAvium type={'secondary'}
-                                         onPress={() => this.props.navigation.navigate('EditVisit', {id: visit.id})}
-                                         icon={iconEdit}>
-                                editar visita
-                            </ButtonAvium>
-                        </View>}
-                        {!this.props.route.params.isSyncr &&
-                        <ButtonAvium onPress={this.handlerOnSync} icon={iconSync}>
-                            sincronizar visita
-                        </ButtonAvium>}
+        if (visit) {
+            return (
+                <ScrollView style={styles.container}>
+                    <HeaderShort/>
+                    <View style={styles.body}>
+                        <Title flex={styles.title}>
+                            DETALLE VISITA
+                        </Title>
+                        <View style={styles.form}>
+                            <InputDisabled label={'Productor'} value={visit.producer && visit.producer.label}/>
+                            <InputDisabled label={'Campo'} value={visit.field && visit.field.label}/>
+                            <InputDisabled label={'Cuartel'} value={visit.quarter && visit.quarter.label}/>
+                            {
+                                visit.labors && visit.labors.map((labor, index) => {
+                                    return <View key={index}>
+                                        <InputDisabled label={'Labor'} value={labor.labor && labor.labor.label}/>
+                                        <InputDisabled label={'Comentarios'} value={labor.comment}/>
+                                        <InputImageDisabled label={'Imagen labor'} uri={labor.image}/>
+                                    </View>
+                                })
+                            }
+                            {!this.props.route.params.isSyncr && <View style={{paddingBottom: 20}}>
+                                <ButtonAvium type={'secondary'}
+                                             onPress={() => this.props.navigation.navigate('EditVisit', {id: visit.id})}
+                                             icon={iconEdit}>
+                                    editar visita
+                                </ButtonAvium>
+                            </View>}
+                            {!this.props.route.params.isSyncr &&
+                            <ButtonAvium onPress={this.handlerOnSync} icon={iconSync}>
+                                sincronizar visita
+                            </ButtonAvium>}
+                        </View>
                     </View>
-                </View>
-            </ScrollView>
-        );
+                </ScrollView>
+            );
+        }
+        return null
     }
 }
 
 const mapDispatchToProps = dispatch => ({
-    postVisit: payload => dispatch(postVisit(payload))
+    postVisit: payload => dispatch(postVisit(payload)),
+    getVisit: payload => dispatch(getVisit(payload))
 });
 
 export default connect(null, mapDispatchToProps)(ShowVisit);

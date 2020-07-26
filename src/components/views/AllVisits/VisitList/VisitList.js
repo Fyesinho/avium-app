@@ -47,12 +47,12 @@ const style = StyleSheet.create({
     buttons: {
         flex: 0.4,
         flexDirection: 'row',
-        justifyContent: 'space-between',
+        justifyContent: 'flex-end',
     }
 });
 
-const iconSync = <MaterialIcons name="sync" size={12} color="green" />;
-const iconNoSync = <MaterialIcons name="sync-disabled" size={12} color="red" />;
+const iconSync = <MaterialIcons name="sync" size={12} color="green"/>;
+const iconNoSync = <MaterialIcons name="sync-disabled" size={12} color="red"/>;
 
 const VisitList = ({visit}) => {
     let [fontsLoaded] = useFonts(textRegular);
@@ -65,11 +65,12 @@ const VisitList = ({visit}) => {
             </Text>
         </View>;
     }
-    const date = new Date(visit.id).toLocaleDateString("en-US")
+    let date = new Date(visit.id).toLocaleDateString("es-CL")
+    console.log()
     return (
         <View style={style.container}>
             <View style={style.firstRow}>
-                <View>{visit.state ? iconSync : iconNoSync}</View>
+                <View>{visit.sync ? iconSync : iconNoSync}</View>
                 <View><Text style={style.firstRowText}>{visit.producer && visit.producer.label}</Text></View>
             </View>
             <View style={style.secondRow}>
@@ -78,10 +79,13 @@ const VisitList = ({visit}) => {
                     <Text style={style.secondRowText}>{date}</Text>
                 </View>
                 <View style={style.buttons}>
-                    <ButtonAviumList type={'secondary'} onPress={() => navigation.navigate('EditVisit', {id: visit.id})}>
+                    {!visit.sync &&
+                    <View style={{paddingRight: 10}}><ButtonAviumList type={'secondary'}
+                                     onPress={() => navigation.navigate('EditVisit', {id: visit.id})}>
                         Editar
-                    </ButtonAviumList>
-                    <ButtonAviumList onPress={() => navigation.navigate('ShowVisit', {isSyncr: visit.isSync, id: visit.id})}>
+                    </ButtonAviumList></View>}
+                    <ButtonAviumList
+                        onPress={() => navigation.navigate('ShowVisit', {isSyncr: visit.sync, id: visit.id, idRemote: visit.idRemote})}>
                         Ver
                     </ButtonAviumList>
                 </View>

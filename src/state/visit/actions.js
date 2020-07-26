@@ -1,13 +1,78 @@
 import axios from 'axios';
 import store from "../store";
 import moment from 'moment';
-import {POST_VISIT_FAIL, POST_VISIT_INIT, POST_VISIT_SUCCESS} from "./const";
+import {
+    GET_CURRENT_VISIT_FAIL,
+    GET_CURRENT_VISIT_INIT, GET_CURRENT_VISIT_SUCCESS,
+    GET_VISIT_FAIL,
+    GET_VISIT_INIT,
+    GET_VISIT_SUCCESS,
+    POST_VISIT_FAIL,
+    POST_VISIT_INIT,
+    POST_VISIT_SUCCESS
+} from "./const";
 import {LOADING_END, LOADING_INIT} from "../loading/const";
 import {visit} from "../../server/visit";
 
+export const getVisit = id => {
+    const token = store.getState().user.userData.token;
+    return async dispatch => {
+        dispatch({type: LOADING_INIT});
+        dispatch({type: GET_CURRENT_VISIT_INIT});
+        const actionSuccess = response => {
+            dispatch({type: GET_CURRENT_VISIT_SUCCESS, payload: response})
+            dispatch({type: LOADING_END});
+        }
+        const actionFail = error => {
+            dispatch({type: GET_CURRENT_VISIT_FAIL, payload: error})
+            dispatch({type: LOADING_END});
+        }
+        try {
+            const response = await axios.get(`${visit}/${id}`, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                    "X-Requested-With": "XMLHttpRequest",
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+            actionSuccess(response.data)
+            return response.data;
+        } catch (e) {
+            actionFail(e.response)
+        }
+    }
+}
+
+export const getVisits = () => {
+    const token = store.getState().user.userData.token;
+    return async dispatch => {
+        dispatch({type: LOADING_INIT});
+        dispatch({type: GET_VISIT_INIT});
+        const actionSuccess = response => {
+            dispatch({type: GET_VISIT_SUCCESS, payload: response})
+            dispatch({type: LOADING_END});
+        }
+        const actionFail = error => {
+            dispatch({type: GET_VISIT_FAIL, payload: error})
+            dispatch({type: LOADING_END});
+        }
+        try {
+            const response = await axios.get(visit, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                    "X-Requested-With": "XMLHttpRequest",
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+            actionSuccess(response.data)
+            return response.data;
+        } catch (e) {
+            actionFail(e.response)
+        }
+    }
+}
+
 export const postVisit = (payload) => {
-    console.log('payload', payload)
-    console.log(store.getState())
     const token = store.getState().user.userData.token;
     return async dispatch => {
         dispatch({type: LOADING_INIT});
@@ -32,7 +97,7 @@ export const postVisit = (payload) => {
                 const photo = {
                     uri: labor.image,
                     type: 'image/jpeg',
-                    name: `labor_${index}.jpg`,
+                    name: `labor_${time}_${index}.jpg`,
                 };
                 formData.append(`labors[${index}][comment]`, 'labor.comment');
                 formData.append(`labors[${index}][image]`, photo);
@@ -48,7 +113,7 @@ export const postVisit = (payload) => {
             actionSuccess(response.data)
             return response.data;
         } catch (e) {
-            actionFail(e)
+            actionFail(e.response)
         }
     }
 }

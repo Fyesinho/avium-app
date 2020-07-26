@@ -137,7 +137,7 @@ const EditVisit = ({navigation, route}) => {
             await AsyncStorage.removeItem(`@visit-${id}`);
         }
         catch(e) {
-            alert('La visita no exista')
+            alert('La visita no existe')
         }
         try {
             const jsonValue = JSON.stringify(structureResponse)
@@ -211,7 +211,7 @@ const EditVisit = ({navigation, route}) => {
                                  type={!isValidForm() ? 'disabled' : ''}
                                  disabled={!isValidForm()}
                     >
-                        Ingresar visita
+                        Guardar visita
                     </ButtonAvium>
                 </View>
             </View>

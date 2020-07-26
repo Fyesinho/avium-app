@@ -56,7 +56,7 @@ const style = StyleSheet.create({
     },
 })
 
-const Filter = ({noSyncList}) => {
+const Filter = ({noSyncList, syncList}) => {
     let [fontsLoaded] = useFonts(titleFontBond);
     if (!fontsLoaded) {
         return <View>
@@ -65,6 +65,10 @@ const Filter = ({noSyncList}) => {
             </Text>
         </View>;
     }
+
+    const totalList = [...noSyncList, ...syncList];
+    totalList.sort((a, b) => (a.id < b.id) ? 1 : -1)
+    console.log(totalList)
     return (
         <View>
             <View style={style.container}>
@@ -80,7 +84,7 @@ const Filter = ({noSyncList}) => {
             </View>
             <View style={{paddingTop: 15}}>
                 {
-                    noSyncList && noSyncList.map((visit, index) => {
+                    totalList && totalList.map((visit, index) => {
                         return <VisitList key={index} visit={visit}/>
                     })
                 }
