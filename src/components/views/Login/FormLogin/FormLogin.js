@@ -26,7 +26,7 @@ const FormLogin = ({navigation, getLogin, user}) => {
             navigation.navigate('Home');
         }
     }
-    console.log(rememberAccount)
+    // console.log(rememberAccount)
     return (
         <>
             <InputText

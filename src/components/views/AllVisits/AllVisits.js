@@ -31,6 +31,7 @@ const AllVisits = ({visits, getVisits}) => {
             // AsyncStorage.clear()
             try {
                 //Call Async Visits
+                console.log('se mete')
                 const keys = await AsyncStorage.getAllKeys();
                 const filterKeys = keys.filter(key => key.includes('visit'));
                 const result = await AsyncStorage.multiGet(filterKeys);
@@ -44,7 +45,7 @@ const AllVisits = ({visits, getVisits}) => {
             }
         })();
     }, [])
-    console.log('visist', visits)
+    // console.log('visist', visits)
     return (
         <ScrollView style={styles.container}>
             <HeaderShort/>

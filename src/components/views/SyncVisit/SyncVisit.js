@@ -88,7 +88,7 @@ const SyncVisit = ({navigation}) => {
                     <ButtonAvium icon={iconAdd} onPress={() => navigation.navigate('AddVisit')}>
                         ingresar otra visita
                     </ButtonAvium>
-                    <ButtonAvium icon={iconSearch} onPress={() => navigation.navigate('AllVisits')}>
+                    <ButtonAvium icon={iconSearch} onPress={() => navigation.push('AllVisits')}>
                         Ver todas mis visitas
                     </ButtonAvium>
                 </View>

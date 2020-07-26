@@ -3,6 +3,7 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {useFonts} from "@use-expo/font";
 import {primaryColor, titleFontBond} from "../../../utils/const/style";
 import VisitList from "../../views/AllVisits/VisitList/VisitList";
+import Loading from "../../views/Loading/Loading";
 
 const style = StyleSheet.create({
     container: {
@@ -59,16 +60,12 @@ const style = StyleSheet.create({
 const Filter = ({noSyncList, syncList}) => {
     let [fontsLoaded] = useFonts(titleFontBond);
     if (!fontsLoaded) {
-        return <View>
-            <Text>
-                Cargando...
-            </Text>
-        </View>;
+        return <Loading/>;
     }
 
     const totalList = [...noSyncList, ...syncList];
     totalList.sort((a, b) => (a.id < b.id) ? 1 : -1)
-    console.log(totalList)
+    // console.log(totalList)
     return (
         <View>
             <View style={style.container}>

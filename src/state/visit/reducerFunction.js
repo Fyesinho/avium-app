@@ -18,7 +18,6 @@ export const reducerCurrentVisit = visit => ({
     },
     id: 7,
     labors: visit.labors.map(labor => {
-        console.log('labor', labor)
         return {
             comment: labor.comment,
             image: labor.image,

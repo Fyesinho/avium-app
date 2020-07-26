@@ -7,6 +7,7 @@ import ButtonAviumList from "../../../commons/ButtonList/ButtonAviumList";
 import {textBold, textRegular} from "../../../../utils/const/style";
 import {MaterialIcons} from "@expo/vector-icons";
 import Hr from "../../../commons/Hr/Hr";
+import Loading from "../../Loading/Loading";
 
 const style = StyleSheet.create({
     container: {
@@ -59,14 +60,10 @@ const VisitList = ({visit}) => {
     let [fontsLoaded2] = useFonts(textBold);
     const navigation = useNavigation();
     if (!fontsLoaded || !fontsLoaded2) {
-        return <View>
-            <Text>
-                Cargando...
-            </Text>
-        </View>;
+        return <Loading/>;
     }
     let date = new Date(visit.id).toLocaleDateString("es-CL")
-    console.log()
+    // console.log()
     return (
         <View style={style.container}>
             <View style={style.firstRow}>
@@ -85,7 +82,7 @@ const VisitList = ({visit}) => {
                         Editar
                     </ButtonAviumList></View>}
                     <ButtonAviumList
-                        onPress={() => navigation.navigate('ShowVisit', {isSyncr: visit.sync, id: visit.id, idRemote: visit.idRemote})}>
+                        onPress={() => navigation.push('ShowVisit', {isSyncr: visit.sync, id: visit.id, idRemote: visit.idRemote})}>
                         Ver
                     </ButtonAviumList>
                 </View>
