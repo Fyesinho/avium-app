@@ -34,7 +34,6 @@ class Login extends React.Component {
             const userTemporal = await AsyncStorage.getItem(`@user`)
             const user = JSON.parse(userTemporal);
             if (user) {
-                // console.log('token', user.token)
                 await this.props.getLogin(user);
                 await this.props.getProducers(user.token)
                 this.props.navigation.navigate('Home')

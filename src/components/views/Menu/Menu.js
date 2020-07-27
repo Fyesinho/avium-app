@@ -1,11 +1,11 @@
 import React from 'react';
-import {Image, StyleSheet, Text, View} from "react-native";
+import {Image, StyleSheet, Text, View, TouchableOpacity} from "react-native";
 import {AntDesign, FontAwesome, MaterialCommunityIcons} from '@expo/vector-icons';
-import HeaderShort from "../../commons/Headers/HeaderShort/HeaderShort";
 import Title from "../../commons/Title/Title";
 import MenuItem from "./MenuItem/MenuItem";
-import {primaryColor, textBold, textRegular, titleFont} from "../../../utils/const/style";
+import {primaryColor, textBold, textRegular} from "../../../utils/const/style";
 import {useFonts} from "@use-expo/font";
+import HeaderShortMenu from "../../commons/Headers/HeaderShortMenu/HeaderShortMenu";
 
 const styles = StyleSheet.create({
     container: {
@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
     body: {
         flex: 0.85,
         width: '100%',
-        paddingLeft: 40,
+        paddingLeft: 20,
         paddingRight: 40,
         paddingTop: 15,
         paddingBottom: 15,
@@ -51,11 +51,11 @@ const styles = StyleSheet.create({
 
 const iconClose = <AntDesign name="close" size={24} color={primaryColor}/>;
 const iconHome = <FontAwesome name="home" size={24} color={primaryColor}/>;
-const iconAdd = <MaterialCommunityIcons name="file-document-box-plus" size={24} color={primaryColor} />;
-const iconSearch = <MaterialCommunityIcons name="file-document-box-search" size={24} color={primaryColor} />;
-const iconLogout = <MaterialCommunityIcons name="logout" size={24} color={primaryColor} />;
+const iconAdd = <MaterialCommunityIcons name="file-document-box-plus" size={24} color={primaryColor}/>;
+const iconSearch = <MaterialCommunityIcons name="file-document-box-search" size={24} color={primaryColor}/>;
+const iconLogout = <MaterialCommunityIcons name="logout" size={24} color={primaryColor}/>;
 
-const Menu = () => {
+const Menu = ({setModalVisible}) => {
 
     let [fontsLoaded] = useFonts(textRegular);
     let [fontsLoaded2] = useFonts(textBold);
@@ -69,11 +69,11 @@ const Menu = () => {
 
     return (
         <View style={styles.container}>
-            <HeaderShort/>
+            <HeaderShortMenu/>
             <View style={styles.body}>
-                <View style={{flex: 0.1, alignItems: 'flex-end'}}>
+                <TouchableOpacity style={{flex: 0.1, alignItems: 'flex-end'}} onPress={() => setModalVisible(false)}>
                     {iconClose}
-                </View>
+                </TouchableOpacity>
                 <Title flex={styles.title}>
                     menu
                 </Title>
@@ -95,13 +95,13 @@ const Menu = () => {
                         </View>
                     </View>
                     <View style={{flex: 0.6, justifyContent: 'space-around', paddingTop: 15}}>
-                        <MenuItem icon={iconHome} title={'Home'} to={'Home'} hr={true}/>
-                        <MenuItem icon={iconAdd} title={'INGRESAR nueva visita'} to={'Home'} hr={true}/>
-                        <MenuItem icon={iconSearch} title={'ver mis visitas'} to={'Home'} hr={true}/>
+                        <MenuItem icon={iconHome} title={'Home'} to={'Home'} hr={true} setModalVisible={setModalVisible}/>
+                        <MenuItem icon={iconAdd} title={'INGRESAR nueva visita'} to={'AddVisit'} hr={true} setModalVisible={setModalVisible}/>
+                        <MenuItem icon={iconSearch} title={'ver mis visitas'} to={'AllVisits'} hr={true} setModalVisible={setModalVisible}/>
                     </View>
                 </View>
                 <View style={{flex: 0.1}}>
-                    <MenuItem icon={iconLogout} title={'Cerrar sesión'} to={'Home'}/>
+                    <MenuItem icon={iconLogout} title={'Cerrar sesión'} to={'Login'} setModalVisible={setModalVisible}/>
                 </View>
             </View>
         </View>
