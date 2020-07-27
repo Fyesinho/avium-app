@@ -7,10 +7,10 @@ export const loginNoSync = (user) => {
     return async dispatch => {
         const loginSuccess = response => {
             dispatch({type: LOGIN_USER_SUCCESS, payload: response})
-            dispatch({type: LOADING_END});
+            // dispatch({type: LOADING_END});
         }
         const loginFail = error => {
-            dispatch({type: LOADING_END});
+            // dispatch({type: LOADING_END});
             dispatch({type: LOGIN_USER_FAIL, payload: error})
         }
         try {

@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import {connect} from 'react-redux';
@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
 
 const iconAdd = <MaterialCommunityIcons name="file-document-box-plus" size={20} color="white"/>;
 
-const AddVisit = ({navigation, optionsProducer}) => {
+const AddVisit = ({navigation, optionsProducer, optionsField, optionsLabor, optionsQuarter}) => {
     const initialLabor = {
         labor: -1,
         comment: '',
@@ -42,24 +42,6 @@ const AddVisit = ({navigation, optionsProducer}) => {
     const [field, setField] = useState(-1);
     const [quarter, setQuarter] = useState(-1);
     const [labors, setLabors] = useState([initialLabor]);
-
-    const optionField = [
-        {label: 'Campo 1', value: 1},
-        {label: 'Campo 2', value: 2},
-        {label: 'Campo 3', value: 3},
-    ]
-
-    const optionsQuarter = [
-        {label: 'Cuartel 1', value: 1},
-        {label: 'Cuartel 2', value: 2},
-        {label: 'Cuartel 3', value: 3},
-    ]
-
-    const optionsLabor = [
-        {label: 'Labor 1', value: 1},
-        {label: 'Labor 2', value: 2},
-        {label: 'Labor 3', value: 3},
-    ]
 
     const isValidForm = () => {
         if (producer === -1) {
@@ -90,12 +72,11 @@ const AddVisit = ({navigation, optionsProducer}) => {
         const id = Date.now();
         const structureResponse = {
             producer: optionsProducer.find(object => object.value === producer),
-            field: optionField.find(object => object.value === field),
+            field: optionsField.find(object => object.value === field),
             quarter: optionsQuarter.find(object => object.value === quarter),
             labors,
             id,
-            userId: 11,
-            stateSync: 0
+            sync: false
         }
         try {
             const jsonValue = JSON.stringify(structureResponse)
@@ -108,8 +89,11 @@ const AddVisit = ({navigation, optionsProducer}) => {
 
     const handlerLabor = (value, idx, field) => {
         setLabors(labors.map((labor, index) => {
-            if(index === idx) {
-                return {...labor, [field]: field === 'labor' ? optionsLabor.find(object => object.value === value) : value}
+            if (index === idx) {
+                return {
+                    ...labor,
+                    [field]: field === 'labor' ? optionsLabor.find(object => object.value === value) : value
+                }
             }
             return {...labor};
         }));
@@ -131,7 +115,7 @@ const AddVisit = ({navigation, optionsProducer}) => {
                     />
                     <InputSelect
                         label={'Seleccionar Campo'}
-                        items={optionField}
+                        items={optionsField}
                         value={field}
                         onValueChange={id => setField(id)}
                     />
@@ -179,7 +163,10 @@ const AddVisit = ({navigation, optionsProducer}) => {
 }
 
 const mapStateToProps = state => ({
-    optionsProducer: state.producers.producersData
+    optionsProducer: state.producers.producersData,
+    optionsField: state.field.fieldData,
+    optionsLabor: state.labor.laborData,
+    optionsQuarter: state.quarter.quarterData,
 });
 
 export default connect(mapStateToProps)(AddVisit);

@@ -30,16 +30,14 @@ const AllVisits = ({visits, getVisits}) => {
         (async function () {
             // AsyncStorage.clear()
             try {
+                //Call Sync Visits
+                await getVisits();
                 //Call Async Visits
-                console.log('se mete')
                 const keys = await AsyncStorage.getAllKeys();
                 const filterKeys = keys.filter(key => key.includes('visit'));
                 const result = await AsyncStorage.multiGet(filterKeys);
                 const response = result.map((result, i, store) => ({...JSON.parse(store[i][1])}))
                 setNoSyncList(response)
-
-                //Call Sync Visits
-                await getVisits();
             } catch (e) {
                 console.error(e);
             }

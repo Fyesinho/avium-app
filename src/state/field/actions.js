@@ -1,32 +1,32 @@
 import axios from 'axios';
 import {LOADING_END, LOADING_INIT} from "../loading/const";
-import {GET_PRODUCER_FAIL, GET_PRODUCER_INIT, GET_PRODUCER_SUCCESS} from "./const";
-import {getProducer} from "../../server/producer";
+import {GET_FIELD_FAIL, GET_FIELD_INIT, GET_FIELD_SUCCESS} from "./const";
+import {getField} from "../../server/field";
 
-export const getProducers = (token) => {
+export const getFields = (token) => {
     return async dispatch => {
         dispatch({type: LOADING_INIT});
-        dispatch({type: GET_PRODUCER_INIT});
-        const getProducerSuccess = response => {
-            dispatch({type: GET_PRODUCER_SUCCESS, payload: response})
+        dispatch({type: GET_FIELD_INIT});
+        const actionSuccess = response => {
+            dispatch({type: GET_FIELD_SUCCESS, payload: response})
             // dispatch({type: LOADING_END});
         }
-        const getProducerError = error => {
+        const actionError = error => {
             // dispatch({type: LOADING_END});
-            dispatch({type: GET_PRODUCER_FAIL, payload: error})
+            dispatch({type: GET_FIELD_FAIL, payload: error.response})
         }
         try {
-            const response = await axios.get(getProducer, {
+            const response = await axios.get(getField, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                     "X-Requested-With": "XMLHttpRequest",
                     'Authorization': `Bearer ${token}`
                 }
             })
-            getProducerSuccess(response.data)
+            actionSuccess(response.data)
             return response.data;
         } catch (e) {
-            getProducerError(e)
+            actionError(e)
         }
     }
 }

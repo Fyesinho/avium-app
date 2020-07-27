@@ -14,7 +14,6 @@ import Menu from "./src/components/views/Menu/Menu";
 import EditVisit from "./src/components/views/EditVisit/EditVisit";
 
 import store from './src/state/store';
-import AsyncStorage from "@react-native-community/async-storage";
 
 const Stack = createStackNavigator();
 
