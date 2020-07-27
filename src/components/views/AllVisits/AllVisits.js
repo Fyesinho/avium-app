@@ -43,7 +43,6 @@ const AllVisits = ({visits, getVisits}) => {
             }
         })();
     }, [])
-    // console.log('visist', visits)
     return (
         <ScrollView style={styles.container}>
             <HeaderShort/>

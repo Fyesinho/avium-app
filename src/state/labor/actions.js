@@ -5,7 +5,7 @@ import {getLabor} from "../../server/labor";
 
 export const getLabors = (token) => {
     return async dispatch => {
-        dispatch({type: LOADING_INIT});
+        // dispatch({type: LOADING_INIT});
         dispatch({type: GET_LABOR_INIT});
         const actionSuccess = response => {
             dispatch({type: GET_LABOR_SUCCESS, payload: response})

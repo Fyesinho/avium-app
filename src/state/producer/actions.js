@@ -6,7 +6,7 @@ import {getProducer} from "../../server/producer";
 export const getProducers = (token) => {
     return async dispatch => {
         dispatch({type: LOADING_INIT});
-        dispatch({type: GET_PRODUCER_INIT});
+        // dispatch({type: GET_PRODUCER_INIT});
         const getProducerSuccess = response => {
             dispatch({type: GET_PRODUCER_SUCCESS, payload: response})
             // dispatch({type: LOADING_END});

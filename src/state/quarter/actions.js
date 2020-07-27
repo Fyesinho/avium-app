@@ -5,7 +5,7 @@ import {getQuarter} from "../../server/quarter";
 
 export const getQuarters = (token) => {
     return async dispatch => {
-        dispatch({type: LOADING_INIT});
+        // dispatch({type: LOADING_INIT});
         dispatch({type: GET_QUARTER_INIT});
         const actionSuccess = response => {
             dispatch({type: GET_QUARTER_SUCCESS, payload: response})

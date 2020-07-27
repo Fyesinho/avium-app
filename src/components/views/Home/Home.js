@@ -1,5 +1,8 @@
-import React from 'react';
-import {Image, StyleSheet, Text, View} from 'react-native';
+import React, {useEffect} from 'react';
+import {Image, StyleSheet, Text, View, BackHandler, Alert} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
+import {useRoute} from '@react-navigation/native';
+
 import {connect} from 'react-redux';
 import HeaderLarge from "../../commons/Headers/HeaderLarge/HeaderLarge";
 import ButtonAvium from "../../commons/Button/ButtonAvium";
@@ -53,7 +56,33 @@ const styles = StyleSheet.create({
     }
 });
 
-const Home = ({navigation, user}) => {
+const Home = ({user}) => {
+    const route = useRoute();
+    const navigation = useNavigation();
+    useEffect(() => {
+        const backAction = () => {
+            if(route.name === 'Home') {
+                console.log(route.name)
+                Alert.alert("Avium Controller", "¿Estás segura/o que deseas salir?", [
+                    {
+                        text: "Cancelar",
+                        onPress: () => null,
+                        style: "cancel"
+                    },
+                    { text: "Salir", onPress: () => BackHandler.exitApp() }
+                ]);
+                return true;
+            } else {
+                return false;
+            }
+        };
+        const backHandler = BackHandler.addEventListener(
+            "hardwareBackPress",
+            backAction
+        );
+        return () => backHandler.remove();
+    }, []);
+
     let [fontsLoaded] = useFonts(textBold);
     if (!fontsLoaded) {
         return <Loading/>

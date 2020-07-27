@@ -5,7 +5,7 @@ import {getField} from "../../server/field";
 
 export const getFields = (token) => {
     return async dispatch => {
-        dispatch({type: LOADING_INIT});
+        // dispatch({type: LOADING_INIT});
         dispatch({type: GET_FIELD_INIT});
         const actionSuccess = response => {
             dispatch({type: GET_FIELD_SUCCESS, payload: response})

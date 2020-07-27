@@ -1,8 +1,9 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Provider} from 'react-redux';
-import {NavigationContainer} from '@react-navigation/native';
+import {NavigationContainer, useRoute} from '@react-navigation/native';
+import { useNavigationState } from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack';
-import {StatusBar} from "react-native";
+import {Alert, BackHandler, StatusBar} from "react-native";
 
 import Login from "./src/components/views/Login/Login";
 import Home from "./src/components/views/Home/Home";
@@ -16,6 +17,7 @@ import EditVisit from "./src/components/views/EditVisit/EditVisit";
 import store from './src/state/store';
 
 const Stack = createStackNavigator();
+
 
 export default function App() {
     return (
