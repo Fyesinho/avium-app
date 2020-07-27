@@ -63,7 +63,6 @@ const VisitList = ({visit}) => {
         return <Loading/>;
     }
     let date = new Date(visit.id).toLocaleDateString("es-CL")
-    // console.log()
     return (
         <View style={style.container}>
             <View style={style.firstRow}>

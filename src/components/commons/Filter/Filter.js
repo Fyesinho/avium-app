@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {useFonts} from "@use-expo/font";
 import {primaryColor, titleFontBond} from "../../../utils/const/style";
@@ -30,7 +30,7 @@ const style = StyleSheet.create({
         borderBottomLeftRadius: 5,
         borderTopLeftRadius: 5,
         borderWidth: 1,
-        borderColor: primaryColor,
+        borderColor: '#888888',
         paddingTop: 5,
         paddingBottom: 5,
         flex: 0.33,
@@ -55,28 +55,77 @@ const style = StyleSheet.create({
         borderBottomRightRadius: 5,
         borderTopRightRadius: 5,
     },
+    buttonFirstSelected: {
+        borderBottomLeftRadius: 5,
+        borderTopLeftRadius: 5,
+        borderWidth: 1,
+        borderColor: primaryColor,
+        paddingTop: 5,
+        paddingBottom: 5,
+        flex: 0.33,
+        alignItems: 'center'
+    },
+    buttonMiddleSelect: {
+        borderBottomWidth: 1,
+        borderTopWidth: 1,
+        borderLeftWidth: 1,
+        borderRightWidth: 1,
+        borderColor: primaryColor,
+        paddingTop: 5,
+        paddingBottom: 5,
+        flex: 0.33,
+        alignItems: 'center'
+    },
+    buttonLastSelected: {
+        borderWidth: 1,
+        borderColor: primaryColor,
+        paddingTop: 5,
+        paddingBottom: 5,
+        flex: 0.33,
+        alignItems: 'center',
+        borderBottomRightRadius: 5,
+        borderTopRightRadius: 5,
+    },
 })
 
 const Filter = ({noSyncList, syncList}) => {
     let [fontsLoaded] = useFonts(titleFontBond);
+    const [filterSelected, setFilterSelected] = useState(0);
     if (!fontsLoaded) {
         return <Loading/>;
     }
 
-    const totalList = [...noSyncList, ...syncList];
-    totalList.sort((a, b) => (a.id < b.id) ? 1 : -1)
-    // console.log(totalList)
+    let totalList;
+    switch (filterSelected) {
+        case 0: {
+            totalList = [...noSyncList, ...syncList];
+            break;
+        }
+        case 1: {
+            totalList = [...syncList];
+            break;
+        }
+        case 2: {
+            totalList = [...noSyncList];
+            break;
+        }
+    }
+    totalList.sort((a, b) => (a.id < b.id) ? 1 : -1);
+
     return (
         <View>
             <View style={style.container}>
-                <TouchableOpacity style={style.buttonFirst}>
-                    <Text style={style.textSelected}>todas</Text>
+                <TouchableOpacity style={filterSelected === 0 ? style.buttonFirstSelected : style.buttonFirst}
+                                  onPress={() => setFilterSelected(0)}>
+                    <Text style={filterSelected === 0 ? style.textSelected : style.text}>todas</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={style.buttonMiddle}>
-                    <Text style={style.text}>sincronizadas</Text>
+                <TouchableOpacity style={filterSelected === 1 ? style.buttonMiddleSelect : style.buttonMiddle}
+                                  onPress={() => setFilterSelected(1)}>
+                    <Text style={filterSelected === 1 ? style.textSelected : style.text}>sincronizadas</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={style.buttonLast}>
-                    <Text style={style.text}>no sincronizadas</Text>
+                <TouchableOpacity style={filterSelected === 2 ? style.buttonLastSelected : style.buttonLast}
+                                  onPress={() => setFilterSelected(2)}>
+                    <Text style={filterSelected === 2 ? style.textSelected : style.text}>no sincronizadas</Text>
                 </TouchableOpacity>
             </View>
             <View style={{paddingTop: 15}}>
