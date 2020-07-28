@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from 'react';
+import {connect} from 'react-redux';
 import {ScrollView, StyleSheet, View} from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import { useScrollToTop } from '@react-navigation/native';
@@ -32,7 +33,7 @@ const styles = StyleSheet.create({
 
 const iconAdd = <MaterialCommunityIcons name="file-document-box-plus" size={20} color="white"/>;
 
-const EditVisit = ({navigation, route}) => {
+const EditVisit = ({navigation, route, optionsProducer, optionsField, optionsLabor, optionsQuarter}) => {
     const ref = React.useRef(null);
 
     useScrollToTop(ref);
@@ -71,34 +72,6 @@ const EditVisit = ({navigation, route}) => {
         return
     }
 
-    const optionsProducer = [
-        {label: 'Productor 1', value: 1},
-        {label: 'Productor 2', value: 2},
-        {label: 'Productor 3', value: 3},
-    ]
-
-    const optionField = [
-        {label: 'Campo 1', value: 1},
-        {label: 'Campo 2', value: 2},
-        {label: 'Campo 3', value: 3},
-    ]
-
-    const optionsQuarter = [
-        {label: 'Cuartel 1', value: 1},
-        {label: 'Cuartel 2', value: 2},
-        {label: 'Cuartel 3', value: 3},
-    ]
-
-    const optionsLabor = [
-        {label: 'Labor 1', value: 1},
-        {label: 'Labor 2', value: 2},
-        {label: 'Labor 3', value: 3},
-    ]
-
-    //
-    // console.log('====================================')
-    // console.log(structure);
-
     const isValidForm = () => {
         if (producer === -1) {
             return false;
@@ -127,11 +100,10 @@ const EditVisit = ({navigation, route}) => {
     const handlerOnPress = async () => {
         const structureResponse = {
             producer: optionsProducer.find(object => object.value === producer),
-            field: optionField.find(object => object.value === field),
+            field: optionsField.find(object => object.value === field),
             quarter: optionsQuarter.find(object => object.value === quarter),
             labors,
             id,
-            userId: 11
         }
         try {
             await AsyncStorage.removeItem(`@visit-${id}`);
@@ -172,7 +144,7 @@ const EditVisit = ({navigation, route}) => {
                     />
                     <InputSelect
                         label={'Seleccionar Campo'}
-                        items={optionField}
+                        items={optionsField}
                         value={field}
                         onValueChange={id => setField(id)}
                     />
@@ -219,4 +191,11 @@ const EditVisit = ({navigation, route}) => {
     );
 }
 
-export default EditVisit;
+const mapStateToProps = state => ({
+    optionsProducer: state.producers.producersData,
+    optionsField: state.field.fieldData,
+    optionsLabor: state.labor.laborData,
+    optionsQuarter: state.quarter.quarterData,
+});
+
+export default  connect(mapStateToProps)(EditVisit);

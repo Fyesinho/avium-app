@@ -99,9 +99,9 @@ export const postVisit = (payload) => {
                     type: 'image/jpeg',
                     name: `labor_${time}_${index}.jpg`,
                 };
-                formData.append(`labors[${index}][comment]`, 'labor.comment');
+                formData.append(`labors[${index}][comment]`, labor.comment);
                 formData.append(`labors[${index}][image]`, photo);
-                formData.append(`labors[${index}][labor_id]`, '1');
+                formData.append(`labors[${index}][labor_id]`, labor.labor.value);
             })
             const response = await axios.post(visit, formData, {
                 headers: {
