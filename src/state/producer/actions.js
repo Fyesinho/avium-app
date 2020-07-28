@@ -2,6 +2,8 @@ import axios from 'axios';
 import {LOADING_END, LOADING_INIT} from "../loading/const";
 import {GET_PRODUCER_FAIL, GET_PRODUCER_INIT, GET_PRODUCER_SUCCESS} from "./const";
 import {getProducer} from "../../server/producer";
+import AsyncStorage from "@react-native-community/async-storage";
+import {reducerFunctionProducer} from "./reducerFunction";
 
 export const getProducers = (token) => {
     return async dispatch => {
@@ -23,8 +25,9 @@ export const getProducers = (token) => {
                     'Authorization': `Bearer ${token}`
                 }
             })
-            getProducerSuccess(response.data)
-            return response.data;
+            getProducerSuccess(response.data);
+            const producers = reducerFunctionProducer(response.data);
+            await AsyncStorage.setItem(`@producers`, JSON.stringify(producers))
         } catch (e) {
             getProducerError(e)
         }

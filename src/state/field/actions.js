@@ -2,6 +2,9 @@ import axios from 'axios';
 import {LOADING_END, LOADING_INIT} from "../loading/const";
 import {GET_FIELD_FAIL, GET_FIELD_INIT, GET_FIELD_SUCCESS} from "./const";
 import {getField} from "../../server/field";
+import {reducerFunctionProducer} from "../producer/reducerFunction";
+import AsyncStorage from "@react-native-community/async-storage";
+import {reducerFunctionField} from "./reducerFunction";
 
 export const getFields = (token) => {
     return async dispatch => {
@@ -24,7 +27,8 @@ export const getFields = (token) => {
                 }
             })
             actionSuccess(response.data)
-            return response.data;
+            const fields = reducerFunctionField(response.data);
+            await AsyncStorage.setItem(`@fields`, JSON.stringify(fields))
         } catch (e) {
             actionError(e)
         }

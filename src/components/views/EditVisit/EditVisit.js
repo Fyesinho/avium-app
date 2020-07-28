@@ -33,7 +33,12 @@ const styles = StyleSheet.create({
 
 const iconAdd = <MaterialCommunityIcons name="file-document-box-plus" size={20} color="white"/>;
 
-const EditVisit = ({navigation, route, optionsProducer, optionsField, optionsLabor, optionsQuarter}) => {
+const EditVisit = ({navigation, route}) => {
+    const [optionsProducer, setOptionsProducer] = useState([]);
+    const [optionsField, setOptionsField] = useState([]);
+    const [optionsLabor, setOptionsLabor] = useState([]);
+    const [optionsQuarter, setOptionsQuarter] = useState([]);
+
     const ref = React.useRef(null);
 
     useScrollToTop(ref);
@@ -62,6 +67,15 @@ const EditVisit = ({navigation, route, optionsProducer, optionsField, optionsLab
                 setField(visit.field.value)
                 setQuarter(visit.quarter.value)
                 setLabors(visit.labors);
+
+                const producers = await AsyncStorage.getItem(`@producers`);
+                setOptionsProducer(JSON.parse(producers))
+                const fields = await AsyncStorage.getItem(`@fields`);
+                setOptionsField(JSON.parse(fields))
+                const laborsOptions = await AsyncStorage.getItem(`@labors`);
+                setOptionsLabor(JSON.parse(laborsOptions))
+                const quarters = await AsyncStorage.getItem(`@quarters`);
+                setOptionsQuarter(JSON.parse(quarters))
             } catch (e) {
                 console.error(e);
             }
@@ -114,7 +128,7 @@ const EditVisit = ({navigation, route, optionsProducer, optionsField, optionsLab
         try {
             const jsonValue = JSON.stringify(structureResponse)
             await AsyncStorage.setItem(`@visit-${id}`, jsonValue)
-            navigation.navigate('ShowVisit', {isSyncr: false, id})
+            navigation.push('ShowVisit', {isSyncr: false, id})
         } catch (e) {
             alert('No se guardó la visita')
         }

@@ -53,6 +53,7 @@ class Login extends React.Component {
     render() {
         return (
             <View style={styles.container}>
+                {this.props.loading && <Loading/>}
                 <HeaderLarge/>
                 <View style={styles.bodyLogin}>
                     <Title flex={styles.title}>

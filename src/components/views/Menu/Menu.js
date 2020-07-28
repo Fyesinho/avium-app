@@ -6,6 +6,7 @@ import MenuItem from "./MenuItem/MenuItem";
 import {primaryColor, textBold, textRegular} from "../../../utils/const/style";
 import {useFonts} from "@use-expo/font";
 import HeaderShortMenu from "../../commons/Headers/HeaderShortMenu/HeaderShortMenu";
+import Loading from "../Loading/Loading";
 
 const styles = StyleSheet.create({
     container: {
@@ -60,11 +61,7 @@ const Menu = ({setModalVisible}) => {
     let [fontsLoaded] = useFonts(textRegular);
     let [fontsLoaded2] = useFonts(textBold);
     if (!fontsLoaded || !fontsLoaded2) {
-        return <View>
-            <Text>
-                Cargando...
-            </Text>
-        </View>;
+        return <Loading/>;
     }
 
     return (

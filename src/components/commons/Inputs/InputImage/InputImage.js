@@ -3,6 +3,7 @@ import {Image, StyleSheet, Text, TouchableOpacity, View, Dimensions} from 'react
 import * as ImagePicker from 'expo-image-picker';
 import {useFonts} from "@use-expo/font";
 import {textRegular} from "../../../../utils/const/style";
+import Loading from "../../../views/Loading/Loading";
 
 const win = Dimensions.get('window');
 
@@ -63,11 +64,7 @@ const InputImage = ({label, value, onChangeImage}) => {
 
     let [fontsLoaded] = useFonts(textRegular);
     if (!fontsLoaded) {
-        return <View>
-            <Text>
-                Cargando...
-            </Text>
-        </View>;
+        return <Loading/>;
     }
 
     return (

@@ -3,6 +3,7 @@ import {useFonts} from "@use-expo/font";
 import {textItalic, textRegular} from "../../../../utils/const/style";
 import {StyleSheet, Text, View} from "react-native";
 import Hr from "../../Hr/Hr";
+import Loading from "../../../views/Loading/Loading";
 
 const styles = StyleSheet.create({
     inputView: {
@@ -32,11 +33,7 @@ const styles = StyleSheet.create({
 const InputDisabled = ({value, label}) => {
     let [fontsLoaded] = useFonts(textRegular);
     if (!fontsLoaded) {
-        return <View>
-            <Text>
-                Cargando...
-            </Text>
-        </View>;
+        return <Loading/>;
     }
     return (
         <View style={styles.inputView}>

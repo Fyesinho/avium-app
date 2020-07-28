@@ -105,10 +105,10 @@ const Home = ({user}) => {
                     </Text>
                 </View>
                 <View style={styles.viewButtons}>
-                    <ButtonAvium icon={iconAdd} onPress={() => navigation.navigate('AddVisit')}>
+                    <ButtonAvium icon={iconAdd} onPress={() => navigation.push('AddVisit')}>
                         Registrar visita
                     </ButtonAvium>
-                    <ButtonAvium icon={iconSearch} onPress={() => navigation.navigate('AllVisits')}>
+                    <ButtonAvium icon={iconSearch} onPress={() => navigation.push('AllVisits')}>
                         Ver mis visitas
                     </ButtonAvium>
                 </View>

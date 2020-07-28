@@ -77,7 +77,7 @@ const VisitList = ({visit}) => {
                 <View style={style.buttons}>
                     {!visit.sync &&
                     <View style={{paddingRight: 10}}><ButtonAviumList type={'secondary'}
-                                     onPress={() => navigation.navigate('EditVisit', {id: visit.id})}>
+                                     onPress={() => navigation.push('EditVisit', {id: visit.id})}>
                         Editar
                     </ButtonAviumList></View>}
                     <ButtonAviumList

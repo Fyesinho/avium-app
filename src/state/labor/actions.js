@@ -2,6 +2,9 @@ import axios from 'axios';
 import {LOADING_END, LOADING_INIT} from "../loading/const";
 import {GET_LABOR_FAIL, GET_LABOR_INIT, GET_LABOR_SUCCESS} from "./const";
 import {getLabor} from "../../server/labor";
+import {reducerFunctionProducer} from "../producer/reducerFunction";
+import AsyncStorage from "@react-native-community/async-storage";
+import {reducerFunctionLabor} from "./reducerFunction";
 
 export const getLabors = (token) => {
     return async dispatch => {
@@ -24,7 +27,8 @@ export const getLabors = (token) => {
                 }
             })
             actionSuccess(response.data)
-            return response.data;
+            const labors = reducerFunctionLabor(response.data);
+            await AsyncStorage.setItem(`@labors`, JSON.stringify(labors))
         } catch (e) {
             actionError(e)
         }

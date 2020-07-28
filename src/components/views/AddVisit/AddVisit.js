@@ -1,7 +1,6 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
-import {connect} from 'react-redux';
 
 import HeaderShort from "../../commons/Headers/HeaderShort/HeaderShort";
 import Title from "../../commons/Title/Title";
@@ -12,6 +11,7 @@ import InputImage from "../../commons/Inputs/InputImage/InputImage";
 import ButtonAvium from "../../commons/Button/ButtonAvium";
 import {MaterialCommunityIcons} from "@expo/vector-icons";
 import ButtonLabor from "../../commons/ButtonLabor/ButtonLabor";
+import Loading from "../Loading/Loading";
 
 const styles = StyleSheet.create({
     container: {
@@ -32,12 +32,36 @@ const styles = StyleSheet.create({
 
 const iconAdd = <MaterialCommunityIcons name="file-document-box-plus" size={20} color="white"/>;
 
-const AddVisit = ({navigation, optionsProducer, optionsField, optionsLabor, optionsQuarter}) => {
+const AddVisit = ({navigation}) => {
+    const [optionsProducer, setOptionsProducer] = useState([]);
+    const [optionsField, setOptionsField] = useState([]);
+    const [optionsLabor, setOptionsLabor] = useState([]);
+    const [optionsQuarter, setOptionsQuarter] = useState([]);
+
+    useEffect(() => {
+        (async function () {
+            try {
+                const producers = await AsyncStorage.getItem(`@producers`);
+                setOptionsProducer(JSON.parse(producers))
+                const fields = await AsyncStorage.getItem(`@fields`);
+                setOptionsField(JSON.parse(fields))
+                const laborsOptions = await AsyncStorage.getItem(`@labors`);
+                setOptionsLabor(JSON.parse(laborsOptions))
+                const quarters = await AsyncStorage.getItem(`@quarters`);
+                setOptionsQuarter(JSON.parse(quarters))
+            } catch (e) {
+                console.error(e);
+            }
+        })();
+    }, [])
+
+
     const initialLabor = {
         labor: -1,
         comment: '',
         image: ''
     };
+
     const [producer, setProducer] = useState(-1);
     const [field, setField] = useState(-1);
     const [quarter, setQuarter] = useState(-1);
@@ -81,13 +105,14 @@ const AddVisit = ({navigation, optionsProducer, optionsField, optionsLabor, opti
         try {
             const jsonValue = JSON.stringify(structureResponse)
             await AsyncStorage.setItem(`@visit-${id}`, jsonValue)
-            navigation.navigate('ShowVisit', {isSyncr: false, id})
+            navigation.push('ShowVisit', {isSyncr: false, id})
         } catch (e) {
             alert('No se guardó la visita')
         }
     }
 
     const handlerLabor = (value, idx, field) => {
+        console.log('entra');
         setLabors(labors.map((labor, index) => {
             if (index === idx) {
                 return {
@@ -99,74 +124,71 @@ const AddVisit = ({navigation, optionsProducer, optionsField, optionsLabor, opti
         }));
     }
 
+    console.log('labors', labors);
     return (
         <ScrollView style={styles.container}>
             <HeaderShort/>
-            <View style={styles.body}>
-                <Title flex={styles.title}>
-                    REGISTRAR VISITA
-                </Title>
-                <View style={styles.form}>
-                    <InputSelect
-                        label={'Seleccionar productor'}
-                        items={optionsProducer}
-                        value={producer}
-                        onValueChange={id => setProducer(id)}
-                    />
-                    <InputSelect
-                        label={'Seleccionar Campo'}
-                        items={optionsField}
-                        value={field}
-                        onValueChange={id => setField(id)}
-                    />
-                    <InputSelect
-                        label={'Seleccionar cuartel'}
-                        items={optionsQuarter}
-                        value={quarter}
-                        onValueChange={id => setQuarter(id)}
-                    />
-                    {
-                        labors.map((labor, index) => <View key={index}>
-                            <Hr/>
-                            <InputSelect
-                                label={'Seleccionar labor'}
-                                items={optionsLabor}
-                                value={labor.labor.value}
-                                onValueChange={id => handlerLabor(id, index, 'labor')}
-                            />
-                            <InputTextArea
-                                label={'Comentario'}
-                                value={labor.comment}
-                                onChangeText={text => handlerLabor(text, index, 'comment')}
-                            />
-                            <InputImage
-                                label={'Agregar imagen'}
-                                value={labor.image}
-                                onChangeImage={image => handlerLabor(image, index, 'image')}
-                            />
-                        </View>)
-                    }
-                    <ButtonLabor onPress={() => setLabors(labors.concat(initialLabor))}>
-                        AGREGAR LABOR
-                    </ButtonLabor>
-                    <ButtonAvium onPress={() => handlerOnPress()}
-                                 icon={iconAdd}
-                                 type={!isValidForm() ? 'disabled' : ''}
-                                 disabled={!isValidForm()}
-                    >
-                        Ingresar visita
-                    </ButtonAvium>
+            {optionsProducer === [] || optionsField === [] || optionsQuarter === [] || optionsLabor === [] ?
+                <Loading/> :
+                <View style={styles.body}>
+                    <Title flex={styles.title}>
+                        REGISTRAR VISITA
+                    </Title>
+                    <View style={styles.form}>
+                        <InputSelect
+                            label={'Seleccionar productor'}
+                            items={optionsProducer}
+                            value={producer}
+                            onValueChange={id => setProducer(id)}
+                        />
+                        <InputSelect
+                            label={'Seleccionar Campo'}
+                            items={optionsField}
+                            value={field}
+                            onValueChange={id => setField(id)}
+                        />
+                        <InputSelect
+                            label={'Seleccionar cuartel'}
+                            items={optionsQuarter}
+                            value={quarter}
+                            onValueChange={id => setQuarter(id)}
+                        />
+                        {
+                            labors.map((labor, index) => <View key={index}>
+                                <Hr/>
+                                <InputSelect
+                                    label={'Seleccionar labor'}
+                                    items={optionsLabor}
+                                    value={labor.labor && labor.labor.value}
+                                    onValueChange={id => handlerLabor(id, index, 'labor')}
+                                />
+                                <InputTextArea
+                                    label={'Comentario'}
+                                    value={labor.comment}
+                                    onChangeText={text => handlerLabor(text, index, 'comment')}
+                                />
+                                <InputImage
+                                    label={'Agregar imagen'}
+                                    value={labor.image}
+                                    onChangeImage={image => handlerLabor(image, index, 'image')}
+                                />
+                            </View>)
+                        }
+                        <ButtonLabor onPress={() => setLabors(labors.concat(initialLabor))}>
+                            AGREGAR LABOR
+                        </ButtonLabor>
+                        <ButtonAvium onPress={() => handlerOnPress()}
+                                     icon={iconAdd}
+                                     type={!isValidForm() ? 'disabled' : ''}
+                                     disabled={!isValidForm()}
+                        >
+                            Ingresar visita
+                        </ButtonAvium>
+                    </View>
                 </View>
-            </View>
+            }
         </ScrollView>
     );
 }
 
-const mapStateToProps = state => ({
-    optionsProducer: state.producers.producersData,
-    optionsField: state.field.fieldData,
-    optionsLabor: state.labor.laborData,
-    optionsQuarter: state.quarter.quarterData,
-});
-
-export default connect(mapStateToProps)(AddVisit);
+export default AddVisit;

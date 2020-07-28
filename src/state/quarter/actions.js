@@ -2,6 +2,9 @@ import axios from 'axios';
 import {LOADING_END, LOADING_INIT} from "../loading/const";
 import {GET_QUARTER_FAIL, GET_QUARTER_INIT, GET_QUARTER_SUCCESS} from "./const";
 import {getQuarter} from "../../server/quarter";
+import {reducerFunctionProducer} from "../producer/reducerFunction";
+import AsyncStorage from "@react-native-community/async-storage";
+import {reducerFunctionQuarter} from "./reducerFunction";
 
 export const getQuarters = (token) => {
     return async dispatch => {
@@ -24,7 +27,8 @@ export const getQuarters = (token) => {
                 }
             })
             actionSuccess(response.data)
-            return response.data;
+            const quarters = reducerFunctionQuarter(response.data);
+            await AsyncStorage.setItem(`@quarters`, JSON.stringify(quarters))
         } catch (e) {
             actionError(e)
         }

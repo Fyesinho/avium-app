@@ -2,6 +2,7 @@ import React from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import {primaryColor, secondaryColor, titleFontBond} from "../../../utils/const/style";
 import {useFonts} from "@use-expo/font";
+import Loading from "../../views/Loading/Loading";
 
 const styles = StyleSheet.create({
     buttonView: {
@@ -47,11 +48,7 @@ const styles = StyleSheet.create({
 const ButtonAviumList = ({onPress, children, icon, type}) => {
     let [fontsLoaded] = useFonts(titleFontBond);
     if (!fontsLoaded) {
-        return <View>
-            <Text>
-                Cargando...
-            </Text>
-        </View>;
+        return <Loading/>;
     }
     let typeStyleText = type === 'secondary' ? styles.secondaryText : styles.primaryText;
     let typeStyleButton = type === 'secondary' ? styles.secondary : styles.primary;

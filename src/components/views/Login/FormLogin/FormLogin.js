@@ -23,7 +23,7 @@ const FormLogin = ({navigation, getLogin, user}) => {
             if (rememberAccount) {
                 await AsyncStorage.setItem(`@user`, JSON.stringify(response))
             }
-            navigation.navigate('Home');
+            navigation.push('Home');
         }
     }
     // console.log(rememberAccount)

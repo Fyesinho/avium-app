@@ -6,6 +6,7 @@ import {AntDesign, FontAwesome5, MaterialCommunityIcons} from '@expo/vector-icon
 import ButtonAvium from "../../commons/Button/ButtonAvium";
 import {primaryColor, textBold, textRegular} from "../../../utils/const/style";
 import {useFonts} from "@use-expo/font";
+import Loading from "../Loading/Loading";
 
 const styles = StyleSheet.create({
     container: {
@@ -52,11 +53,7 @@ const SyncVisit = ({navigation}) => {
     let [fontsLoaded] = useFonts(textRegular);
     let [fontsLoaded2] = useFonts(textBold);
     if (!fontsLoaded || !fontsLoaded2) {
-        return <View>
-            <Text>
-                Cargando...
-            </Text>
-        </View>;
+        return <Loading/>;
     }
     return (
         <View style={styles.container}>

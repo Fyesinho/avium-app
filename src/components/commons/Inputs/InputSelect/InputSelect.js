@@ -3,6 +3,7 @@ import {Picker, StyleSheet, Text, View} from "react-native";
 import {useFonts} from '@use-expo/font';
 import {textItalic, textRegular} from "../../../../utils/const/style";
 import {capitalize} from "../../../../utils/const/functions";
+import Loading from "../../../views/Loading/Loading";
 
 const styles = StyleSheet.create({
     inputView: {
@@ -44,11 +45,7 @@ const InputSelect = ({placeholder, label, onValueChange, items, value}) => {
     let [fontsLoaded] = useFonts(textRegular);
     let [fontsLoaded2] = useFonts(textItalic);
     if (!fontsLoaded || !fontsLoaded2) {
-        return <View>
-            <Text>
-                Cargando...
-            </Text>
-        </View>;
+        return <Loading/>;
     }
     // items.push({label: `${capitalize(label)}...`, value: 0})
     return (

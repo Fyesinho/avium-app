@@ -4,6 +4,7 @@ import {FontAwesome5} from '@expo/vector-icons';
 import {primaryColor, textRegular} from "../../../utils/const/style";
 import {useFonts} from "@use-expo/font";
 import { FontAwesome } from '@expo/vector-icons';
+import Loading from "../../views/Loading/Loading";
 
 const styles = StyleSheet.create({
     buttonView: {
@@ -36,11 +37,7 @@ const styles = StyleSheet.create({
 const ButtonLabor = ({onPress, children, icon}) => {
     let [fontsLoaded] = useFonts(textRegular);
     if (!fontsLoaded) {
-        return <View>
-            <Text>
-                Cargando...
-            </Text>
-        </View>;
+        return <Loading/>;
     }
     return (
         <View style={styles.buttonView}>

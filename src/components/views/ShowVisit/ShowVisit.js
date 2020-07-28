@@ -79,7 +79,7 @@ class ShowVisit extends Component {
         try {
             await this.props.postVisit(this.state.visit, id)
             await AsyncStorage.removeItem(`@visit-${id}`);
-            this.props.navigation.navigate('SyncVisit')
+            this.props.navigation.push('SyncVisit')
         } catch (e) {
             console.log(e)
         }
