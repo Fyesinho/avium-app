@@ -1,4 +1,5 @@
 import React from 'react';
+import {connect} from 'react-redux';
 import {StyleSheet, Text, View} from 'react-native';
 import HeaderLarge from "../../commons/Headers/HeaderLarge/HeaderLarge";
 import Title from "../../commons/Title/Title";
@@ -49,7 +50,10 @@ const iconAdd = <MaterialCommunityIcons name="file-document-box-plus" size={20} 
 const iconSearch = <MaterialCommunityIcons name="file-document-box-search" size={20} color="white"/>;
 const iconEye = <AntDesign name="eye" size={20} color={primaryColor}/>;
 
-const SyncVisit = ({navigation}) => {
+const SyncVisit = ({navigation, route}) => {
+    const visit = route.params && route.params.visit;
+    const idRemote = route.params && route.params.idRemote;
+
     let [fontsLoaded] = useFonts(textRegular);
     let [fontsLoaded2] = useFonts(textBold);
     if (!fontsLoaded || !fontsLoaded2) {
@@ -71,7 +75,7 @@ const SyncVisit = ({navigation}) => {
                             Visita
                         </Text>
                         <Text style={{fontFamily: 'Bold-text', fontSize: 14, paddingLeft: 2}}>
-                             Rodrigo Gonzalez
+                            {visit.producer.label}
                         </Text>
                     </View>
                     <Text style={styles.text}>
@@ -79,10 +83,10 @@ const SyncVisit = ({navigation}) => {
                     </Text>
                 </View>
                 <View style={styles.viewButtons}>
-                    <ButtonAvium type={'secondary'} icon={iconEye} onPress={() => navigation.navigate('ShowVisit', {isSyncr: true})}>
+                    <ButtonAvium type={'secondary'} icon={iconEye} onPress={() => navigation.push('ShowVisit', {isSyncr: true, idRemote: idRemote[0].id})}>
                         ver visita sincronizada
                     </ButtonAvium>
-                    <ButtonAvium icon={iconAdd} onPress={() => navigation.navigate('AddVisit')}>
+                    <ButtonAvium icon={iconAdd} onPress={() => navigation.push('AddVisit')}>
                         ingresar otra visita
                     </ButtonAvium>
                     <ButtonAvium icon={iconSearch} onPress={() => navigation.push('AllVisits')}>

@@ -43,12 +43,8 @@ const AddVisit = ({navigation}) => {
             try {
                 const producers = await AsyncStorage.getItem(`@producers`);
                 setOptionsProducer(JSON.parse(producers))
-                const fields = await AsyncStorage.getItem(`@fields`);
-                setOptionsField(JSON.parse(fields))
                 const laborsOptions = await AsyncStorage.getItem(`@labors`);
                 setOptionsLabor(JSON.parse(laborsOptions))
-                const quarters = await AsyncStorage.getItem(`@quarters`);
-                setOptionsQuarter(JSON.parse(quarters))
             } catch (e) {
                 console.error(e);
             }
@@ -66,6 +62,23 @@ const AddVisit = ({navigation}) => {
     const [field, setField] = useState(-1);
     const [quarter, setQuarter] = useState(-1);
     const [labors, setLabors] = useState([initialLabor]);
+
+    const handlerProducer = async id => {
+        setProducer(id);
+        setField(-1);
+        setQuarter(-1);
+        const fields = await AsyncStorage.getItem(`@fields`);
+        const parsedFields = JSON.parse(fields);
+        setOptionsField(parsedFields.filter(field => field.parentId === id))
+    }
+
+    const handlerFields = async id => {
+        setField(id);
+        setQuarter(-1);
+        const quarters = await AsyncStorage.getItem(`@quarters`);
+        const parsedQuarters = JSON.parse(quarters);
+        setOptionsQuarter(parsedQuarters.filter(field => field.parentId === id))
+    }
 
     const isValidForm = () => {
         if (producer === -1) {
@@ -112,7 +125,6 @@ const AddVisit = ({navigation}) => {
     }
 
     const handlerLabor = (value, idx, field) => {
-        console.log('entra');
         setLabors(labors.map((labor, index) => {
             if (index === idx) {
                 return {
@@ -123,8 +135,6 @@ const AddVisit = ({navigation}) => {
             return {...labor};
         }));
     }
-
-    console.log('labors', labors);
     return (
         <ScrollView style={styles.container}>
             <HeaderShort/>
@@ -139,13 +149,13 @@ const AddVisit = ({navigation}) => {
                             label={'Seleccionar productor'}
                             items={optionsProducer}
                             value={producer}
-                            onValueChange={id => setProducer(id)}
+                            onValueChange={id => handlerProducer(id)}
                         />
                         <InputSelect
                             label={'Seleccionar Campo'}
                             items={optionsField}
                             value={field}
-                            onValueChange={id => setField(id)}
+                            onValueChange={id => handlerFields(id)}
                         />
                         <InputSelect
                             label={'Seleccionar cuartel'}

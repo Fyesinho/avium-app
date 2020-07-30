@@ -77,9 +77,9 @@ class ShowVisit extends Component {
     handlerOnSync = async () => {
         const id = this.props.route.params && this.props.route.params.id;
         try {
-            await this.props.postVisit(this.state.visit, id)
+            const response = await this.props.postVisit(this.state.visit, id);
+            this.props.navigation.push('SyncVisit', {visit: this.state.visit, idRemote: response})
             await AsyncStorage.removeItem(`@visit-${id}`);
-            this.props.navigation.push('SyncVisit')
         } catch (e) {
             console.log(e)
         }
@@ -110,7 +110,7 @@ class ShowVisit extends Component {
                             }
                             {!this.props.route.params.isSyncr && <View style={{paddingBottom: 20}}>
                                 <ButtonAvium type={'secondary'}
-                                             onPress={() => this.props.navigation.navigate('EditVisit', {id: visit.id})}
+                                             onPress={() => this.props.navigation.push('EditVisit', {id: visit.id})}
                                              icon={iconEdit}>
                                     editar visita
                                 </ButtonAvium>

@@ -16,7 +16,7 @@ export const reducerCurrentVisit = visit => ({
     field: {
         label: visit.field
     },
-    id: 7,
+    id: visit.id,
     labors: visit.labors.map(labor => {
         return {
             comment: labor.comment,

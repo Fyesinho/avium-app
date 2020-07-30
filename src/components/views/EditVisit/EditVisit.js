@@ -63,19 +63,15 @@ const EditVisit = ({navigation, route}) => {
                 const value = await AsyncStorage.getItem(`@visit-${id}`)
                 const visit = JSON.parse(value);
                 setVisit(visit)
-                setProducer(visit.producer.value)
-                setField(visit.field.value)
+                await handlerProducer(visit.producer.value)
+                await handlerFields(visit.field.value)
                 setQuarter(visit.quarter.value)
                 setLabors(visit.labors);
 
                 const producers = await AsyncStorage.getItem(`@producers`);
                 setOptionsProducer(JSON.parse(producers))
-                const fields = await AsyncStorage.getItem(`@fields`);
-                setOptionsField(JSON.parse(fields))
                 const laborsOptions = await AsyncStorage.getItem(`@labors`);
                 setOptionsLabor(JSON.parse(laborsOptions))
-                const quarters = await AsyncStorage.getItem(`@quarters`);
-                setOptionsQuarter(JSON.parse(quarters))
             } catch (e) {
                 console.error(e);
             }
@@ -134,6 +130,23 @@ const EditVisit = ({navigation, route}) => {
         }
     }
 
+    const handlerProducer = async id => {
+        setProducer(id);
+        setField(-1);
+        setQuarter(-1);
+        const fields = await AsyncStorage.getItem(`@fields`);
+        const parsedFields = JSON.parse(fields);
+        setOptionsField(parsedFields.filter(field => field.parentId === id))
+    }
+
+    const handlerFields = async id => {
+        setField(id);
+        setQuarter(-1);
+        const quarters = await AsyncStorage.getItem(`@quarters`);
+        const parsedQuarters = JSON.parse(quarters);
+        setOptionsQuarter(parsedQuarters.filter(field => field.parentId === id))
+    }
+
     const handlerLabor = (value, idx, field) => {
         setLabors(labors.map((labor, index) => {
             if(index === idx) {
@@ -154,13 +167,13 @@ const EditVisit = ({navigation, route}) => {
                         label={'Seleccionar productor'}
                         items={optionsProducer}
                         value={producer}
-                        onValueChange={id => setProducer(id)}
+                        onValueChange={id => handlerProducer(id)}
                     />
                     <InputSelect
                         label={'Seleccionar Campo'}
                         items={optionsField}
                         value={field}
-                        onValueChange={id => setField(id)}
+                        onValueChange={id => handlerFields(id)}
                     />
                     <InputSelect
                         label={'Seleccionar cuartel'}
