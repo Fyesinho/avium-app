@@ -5,5 +5,5 @@ import logger from 'redux-logger'
 
 export default createStore(
     rootReducer,
-    applyMiddleware(thunk, /*logger*/)
+    applyMiddleware(thunk, logger)
 )

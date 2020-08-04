@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
     },
 });
 
-const HeaderShort = () => {
+const HeaderShort = ({noBack}) => {
     const [modalVisible, setModalVisible] = useState(false);
     const navigation = useNavigation();
     return (
@@ -50,8 +50,8 @@ const HeaderShort = () => {
                 </View>
             </Modal>
             <ImageBackground source={image} style={styles.image}>
-                <TouchableOpacity onPress={() => navigation.goBack()}>
-                    <AntDesign name="left" size={20} color="white"/>
+                <TouchableOpacity onPress={() => noBack ? null : navigation.goBack()}>
+                    <AntDesign name="left" size={20} color={noBack ? "transparent" : "white"}/>
                 </TouchableOpacity>
                 <Image source={logo} style={styles.logo}/>
                 <TouchableOpacity onPress={() => setModalVisible(true)}>

@@ -38,7 +38,7 @@ export const login = ({email, password}) => {
             // dispatch({type: LOADING_END});
         }
         const loginFail = error => {
-            // dispatch({type: LOADING_END});
+            dispatch({type: LOADING_END});
             dispatch({type: LOGIN_USER_FAIL, payload: error})
         }
         try {

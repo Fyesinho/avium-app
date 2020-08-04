@@ -1,47 +1,112 @@
-import React, { useState, useEffect } from 'react';
-import { Text, View, TouchableOpacity } from 'react-native';
-import { Camera } from 'expo-camera';
+import React, {useEffect, useRef, useState} from 'react';
+import {Text, TouchableOpacity, View} from 'react-native';
+import {Camera} from 'expo-camera';
+import {useNavigation, useRoute} from '@react-navigation/native';
+import {AntDesign, FontAwesome, Ionicons, MaterialCommunityIcons} from '@expo/vector-icons';
+import * as ImagePicker from "expo-image-picker";
 
-export default function Camera() {
+export default function CameraComponent() {
+    const route = useRoute();
+    const camera = useRef(null);
     const [hasPermission, setHasPermission] = useState(null);
-    const [type, setType] = useState(Camera.Constants.Type.back);
+    const [cameraType, setCameraType] = useState(Camera.Constants.Type.back);
 
     useEffect(() => {
         (async () => {
-            const { status } = await Camera.requestPermissionsAsync();
+            const {status} = await Camera.requestPermissionsAsync();
             setHasPermission(status === 'granted');
         })();
     }, []);
 
+    const handleCameraType = () => {
+        setCameraType(cameraType === Camera.Constants.Type.back
+            ? Camera.Constants.Type.front
+            : Camera.Constants.Type.back)
+    }
+
+    const takePicture = async () => {
+        if (camera) {
+            let photo = await camera.current.takePictureAsync();
+            route.params.onChangeImage(photo.uri);
+            navigation.goBack();
+        }
+    }
+
+    let openImagePickerAsync = async () => {
+        let permissionResult = await ImagePicker.requestCameraRollPermissionsAsync();
+        if (permissionResult.granted === false) {
+            alert("Es necesario otorgar permiso para la galería");
+            return;
+        }
+        let pickerResult = await ImagePicker.launchImageLibraryAsync();
+        if (pickerResult.cancelled === true) {
+            return;
+        }
+        route.params.onChangeImage(pickerResult.uri);
+        navigation.goBack();
+    }
+
+
     if (hasPermission === null) {
-        return <View />;
+        return <View/>;
     }
     if (hasPermission === false) {
         return <Text>No access to camera</Text>;
     }
+    const navigation = useNavigation();
+
     return (
-        <View style={{ flex: 1 }}>
-            <Camera style={{ flex: 1 }} type={type}>
+        <View style={{flex: 1}}>
+            <Camera style={{flex: 1}} type={cameraType} ref={camera}>
                 <View
-                    style={{
-                        flex: 1,
-                        backgroundColor: 'transparent',
-                        flexDirection: 'row',
-                    }}>
+                    style={{flexDirection: "row", alignItems: "flex-start", margin: 20, justifyContent: 'flex-start'}}>
                     <TouchableOpacity
                         style={{
-                            flex: 0.1,
                             alignSelf: 'flex-end',
                             alignItems: 'center',
+                            backgroundColor: 'transparent',
                         }}
-                        onPress={() => {
-                            setType(
-                                type === Camera.Constants.Type.back
-                                    ? Camera.Constants.Type.front
-                                    : Camera.Constants.Type.back
-                            );
+                        onPress={() => navigation.goBack()}
+                    >
+                        <AntDesign name="arrowleft" size={40} color="white"/>
+                    </TouchableOpacity>
+                </View>
+                <View style={{flex: 1, flexDirection: "row", justifyContent: "space-between", margin: 40}}>
+                    <TouchableOpacity
+                        onPress={openImagePickerAsync}
+                        style={{
+                            alignSelf: 'flex-end',
+                            alignItems: 'center',
+                            backgroundColor: 'transparent',
                         }}>
-                        <Text style={{ fontSize: 18, marginBottom: 10, color: 'white' }}> Flip </Text>
+                        <Ionicons
+                            name="ios-photos"
+                            style={{color: "#fff", fontSize: 40}}
+                        />
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        onPress={takePicture}
+                        style={{
+                            alignSelf: 'flex-end',
+                            alignItems: 'center',
+                            backgroundColor: 'transparent',
+                        }}>
+                        <FontAwesome
+                            name="camera"
+                            style={{color: "#fff", fontSize: 40}}
+                        />
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        onPress={() => handleCameraType()}
+                        style={{
+                            alignSelf: 'flex-end',
+                            alignItems: 'center',
+                            backgroundColor: 'transparent',
+                        }}>
+                        <MaterialCommunityIcons
+                            name="camera-switch"
+                            style={{color: "#fff", fontSize: 40}}
+                        />
                     </TouchableOpacity>
                 </View>
             </Camera>

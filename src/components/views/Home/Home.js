@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
 import {Alert, BackHandler, Image, StyleSheet, Text, View} from 'react-native';
-import {useNavigation, useRoute} from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 
 import {connect} from 'react-redux';
 import HeaderLarge from "../../commons/Headers/HeaderLarge/HeaderLarge";

@@ -118,7 +118,7 @@ const AddVisit = ({navigation}) => {
         try {
             const jsonValue = JSON.stringify(structureResponse)
             await AsyncStorage.setItem(`@visit-${id}`, jsonValue)
-            navigation.push('ShowVisit', {isSyncr: false, id})
+            navigation.push('ShowVisit', {isSyncr: false, id, noBack: true})
         } catch (e) {
             alert('No se guardó la visita')
         }

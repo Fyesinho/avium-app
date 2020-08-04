@@ -22,7 +22,6 @@ const styles = StyleSheet.create({
         paddingLeft: 40,
         paddingRight: 40,
         paddingTop: 15,
-        paddingBottom: 15,
     },
     title: {},
     form: {
@@ -89,39 +88,60 @@ class ShowVisit extends Component {
         const {visit} = this.state;
         if (visit) {
             return (
-                <ScrollView style={styles.container}>
-                    <HeaderShort/>
-                    <View style={styles.body}>
-                        <Title flex={styles.title}>
-                            DETALLE VISITA
-                        </Title>
-                        <View style={styles.form}>
-                            <InputDisabled label={'Productor'} value={visit.producer && visit.producer.label}/>
-                            <InputDisabled label={'Campo'} value={visit.field && visit.field.label}/>
-                            <InputDisabled label={'Cuartel'} value={visit.quarter && visit.quarter.label}/>
-                            {
-                                visit.labors && visit.labors.map((labor, index) => {
-                                    return <View key={index}>
-                                        <InputDisabled label={'Labor'} value={labor.labor && labor.labor.label}/>
-                                        <InputDisabled label={'Comentarios'} value={labor.comment}/>
-                                        <InputImageDisabled label={'Imagen labor'} uri={labor.image}/>
-                                    </View>
-                                })
-                            }
-                            {!this.props.route.params.isSyncr && <View style={{paddingBottom: 20}}>
-                                <ButtonAvium type={'secondary'}
-                                             onPress={() => this.props.navigation.push('EditVisit', {id: visit.id})}
-                                             icon={iconEdit}>
-                                    editar visita
-                                </ButtonAvium>
-                            </View>}
-                            {!this.props.route.params.isSyncr &&
-                            <ButtonAvium onPress={this.handlerOnSync} icon={iconSync}>
-                                sincronizar visita
-                            </ButtonAvium>}
+                <>
+                    <ScrollView
+                        style={{...styles.container}}>
+                        <HeaderShort noBack={this.props.noBack}/>
+                        <View style={{...styles.body, paddingBottom: this.props.route.params.isSyncr ? 10 : 150}}>
+                            <Title flex={styles.title}>
+                                DETALLE VISITA
+                            </Title>
+                            <View style={styles.form}>
+                                <InputDisabled label={'Productor'} value={visit.producer && visit.producer.label}/>
+                                <InputDisabled label={'Campo'} value={visit.field && visit.field.label}/>
+                                <InputDisabled label={'Cuartel'} value={visit.quarter && visit.quarter.label}/>
+                                {
+                                    visit.labors && visit.labors.map((labor, index) => {
+                                        return <View key={index}>
+                                            <InputDisabled label={'Labor'} value={labor.labor && labor.labor.label}/>
+                                            <InputDisabled label={'Comentarios'} value={labor.comment}/>
+                                            <InputImageDisabled label={'Imagen labor'} uri={labor.image}/>
+                                        </View>
+                                    })
+                                }
+                            </View>
                         </View>
+                    </ScrollView>
+                    {!this.props.route.params.isSyncr &&
+                    <View style={{
+                        alignSelf: 'center',
+                        position: 'absolute',
+                        justifyContent: 'center',
+                        flex: 1,
+                        backgroundColor: '#fafafa',
+                        width: '100%',
+                        paddingLeft: 40,
+                        paddingRight: 40,
+                        paddingTop: 20,
+                        paddingBottom: 20,
+                        bottom: 0,
+                        borderTopWidth: 1,
+                        borderTopColor: 'lightgray'
+                    }}>
+                        {!this.props.route.params.isSyncr && <View style={{paddingBottom: 20}}>
+                            <ButtonAvium type={'secondary'}
+                                         onPress={() => this.props.navigation.push('EditVisit', {id: visit.id})}
+                                         icon={iconEdit}>
+                                editar visita
+                            </ButtonAvium>
+                        </View>}
+                        {!this.props.route.params.isSyncr &&
+                        <ButtonAvium onPress={this.handlerOnSync} icon={iconSync}>
+                            sincronizar visita
+                        </ButtonAvium>}
                     </View>
-                </ScrollView>
+                    }
+                </>
             );
         }
         return null

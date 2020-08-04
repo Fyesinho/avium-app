@@ -39,11 +39,11 @@ class Login extends React.Component {
             const user = JSON.parse(userTemporal);
             if (user) {
                 await this.props.getLogin(user);
-                this.props.navigation.navigate('Home')
                 await this.props.getProducers(user.token);
                 await this.props.getFields(user.token);
                 await this.props.getLabors(user.token);
                 await this.props.getQuarters(user.token);
+                this.props.navigation.navigate('Home')
             }
         } catch (e) {
             console.log(e)

@@ -4,6 +4,7 @@ import * as ImagePicker from 'expo-image-picker';
 import {useFonts} from "@use-expo/font";
 import {textRegular} from "../../../../utils/const/style";
 import Loading from "../../../views/Loading/Loading";
+import {useNavigation} from '@react-navigation/native';
 
 const win = Dimensions.get('window');
 
@@ -49,18 +50,7 @@ const styles = StyleSheet.create({
 });
 
 const InputImage = ({label, value, onChangeImage}) => {
-    let openImagePickerAsync = async () => {
-        let permissionResult = await ImagePicker.requestCameraRollPermissionsAsync();
-        if (permissionResult.granted === false) {
-            alert("Es necesario otorgar permiso para la galería");
-            return;
-        }
-        let pickerResult = await ImagePicker.launchImageLibraryAsync();
-        if (pickerResult.cancelled === true) {
-            return;
-        }
-        onChangeImage(pickerResult.uri);
-    }
+    const navigation = useNavigation();
 
     let [fontsLoaded] = useFonts(textRegular);
     if (!fontsLoaded) {
@@ -72,7 +62,7 @@ const InputImage = ({label, value, onChangeImage}) => {
             <View style={styles.labelView}>
                 <Text style={styles.label}>{label}</Text>
             </View>
-            <TouchableOpacity onPress={openImagePickerAsync} style={styles.button}>
+            <TouchableOpacity onPress={()=> navigation.push('Camera', {onChangeImage: onChangeImage})} style={styles.button}>
                 {
                     value !== '' ?
                         <View style={styles.container}>

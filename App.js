@@ -1,9 +1,8 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {Provider} from 'react-redux';
-import {NavigationContainer, useRoute} from '@react-navigation/native';
-import { useNavigationState } from '@react-navigation/native'
+import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
-import {Alert, BackHandler, StatusBar} from "react-native";
+import {StatusBar} from "react-native";
 
 import Login from "./src/components/views/Login/Login";
 import Home from "./src/components/views/Home/Home";
@@ -15,6 +14,7 @@ import Menu from "./src/components/views/Menu/Menu";
 import EditVisit from "./src/components/views/EditVisit/EditVisit";
 
 import store from './src/state/store';
+import CameraComponent from "./src/components/commons/Camera/Camera";
 
 const Stack = createStackNavigator();
 
@@ -33,6 +33,7 @@ export default function App() {
                     <Stack.Screen name="SyncVisit" component={SyncVisit}/>
                     <Stack.Screen name="AllVisits" component={AllVisits}/>
                     <Stack.Screen name="Menu" component={Menu}/>
+                    <Stack.Screen name="Camera" component={CameraComponent}/>
                 </Stack.Navigator>
             </NavigationContainer>
         </Provider>
