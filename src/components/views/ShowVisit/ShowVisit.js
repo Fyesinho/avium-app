@@ -91,7 +91,7 @@ class ShowVisit extends Component {
                 <>
                     <ScrollView
                         style={{...styles.container}}>
-                        <HeaderShort noBack={this.props.noBack}/>
+                        <HeaderShort noBack={this.props.route.params.noBack}/>
                         <View style={{...styles.body, paddingBottom: this.props.route.params.isSyncr ? 10 : 150}}>
                             <Title flex={styles.title}>
                                 DETALLE VISITA

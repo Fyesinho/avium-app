@@ -14,15 +14,7 @@ export const loginNoSync = (user) => {
             dispatch({type: LOGIN_USER_FAIL, payload: error})
         }
         try {
-            // const formData = new FormData();
-            // formData.append('email', user.email);
-            // formData.append('password', user.password);
-            // const response = await axios.post(getUser, formData, {
-            //     headers: {
-            //         'Content-Type': 'multipart/form-data'
-            //     }})
             loginSuccess(user)
-            // return user;
         } catch (e) {
             loginFail(e)
         }
