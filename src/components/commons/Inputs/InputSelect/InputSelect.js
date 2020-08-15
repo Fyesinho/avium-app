@@ -14,7 +14,6 @@ const styles = StyleSheet.create({
     viewPicker: {
         borderRadius: 5,
         borderWidth: 1,
-        borderColor: '#ACACAC',
         overflow: 'hidden',
         backgroundColor: '#F5F5F5'
     },
@@ -41,7 +40,7 @@ const styles = StyleSheet.create({
     }
 });
 
-const InputSelect = ({placeholder, label, onValueChange, items, value}) => {
+const InputSelect = ({placeholder, label, onValueChange, items, value, isError}) => {
     let [fontsLoaded] = useFonts(textRegular);
     let [fontsLoaded2] = useFonts(textItalic);
     if (!fontsLoaded || !fontsLoaded2) {
@@ -50,10 +49,12 @@ const InputSelect = ({placeholder, label, onValueChange, items, value}) => {
     // items.push({label: `${capitalize(label)}...`, value: 0})
     return (
         <View style={styles.inputView}>
+            {label !== "Seleccionar labor" && label !== "Seleccionar cuartel" &&
             <View style={styles.labelView}>
                 <Text style={styles.label}>{label}</Text>
             </View>
-            <View style={styles.viewPicker}>
+            }
+            <View style={{...styles.viewPicker, borderColor: isError ? 'red' : '#ACACAC'}}>
                 <Picker
                     selectedValue={value}
                     mode="dropdown"

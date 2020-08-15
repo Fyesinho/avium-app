@@ -1,9 +1,8 @@
 import React from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from "react-native";
-import {FontAwesome5} from '@expo/vector-icons';
+import {FontAwesome} from '@expo/vector-icons';
 import {primaryColor, textRegular} from "../../../utils/const/style";
 import {useFonts} from "@use-expo/font";
-import { FontAwesome } from '@expo/vector-icons';
 import Loading from "../../views/Loading/Loading";
 
 const styles = StyleSheet.create({
@@ -46,7 +45,11 @@ const ButtonLabor = ({onPress, children, icon}) => {
                 <Text style={{...styles.primaryText, fontFamily: 'Regular-text'}}>
                     {children}
                 </Text>
-                <FontAwesome name="plus-circle" size={15} color={primaryColor} />
+                {children === 'ELIMINAR LABOR' ?
+                    <FontAwesome name="minus-circle" size={15} color={primaryColor}/>
+                    :
+                    <FontAwesome name="plus-circle" size={15} color={primaryColor}/>
+                }
             </TouchableOpacity>
         </View>
     );

@@ -34,7 +34,6 @@ const FormLogin = ({navigation, getFields, getLogin, getProducers, getLabors, ge
             navigation.push('Home');
         }
     }
-    // console.log(rememberAccount)
     return (
         <>
             <InputText

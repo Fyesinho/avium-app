@@ -1,6 +1,5 @@
 import React from 'react';
-import {Image, StyleSheet, Text, TouchableOpacity, View, Dimensions} from 'react-native';
-import * as ImagePicker from 'expo-image-picker';
+import {Dimensions, Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {useFonts} from "@use-expo/font";
 import {textRegular} from "../../../../utils/const/style";
 import Loading from "../../../views/Loading/Loading";
@@ -21,7 +20,6 @@ const styles = StyleSheet.create({
         height: 100,
         borderRadius: 5,
         borderWidth: 1,
-        borderColor: '#ACACAC',
         alignItems: 'center',
         justifyContent: 'center'
     },
@@ -49,7 +47,7 @@ const styles = StyleSheet.create({
     },
 });
 
-const InputImage = ({label, value, onChangeImage}) => {
+const InputImage = ({label, value, onChangeImage, isError}) => {
     const navigation = useNavigation();
 
     let [fontsLoaded] = useFonts(textRegular);
@@ -62,7 +60,10 @@ const InputImage = ({label, value, onChangeImage}) => {
             <View style={styles.labelView}>
                 <Text style={styles.label}>{label}</Text>
             </View>
-            <TouchableOpacity onPress={()=> navigation.push('Camera', {onChangeImage: onChangeImage})} style={styles.button}>
+            <TouchableOpacity onPress={() => navigation.push('Camera', {onChangeImage: onChangeImage})} style={{
+                ...styles.button,
+                borderColor: isError ? 'red' : '#ACACAC'
+            }}>
                 {
                     value !== '' ?
                         <View style={styles.container}>

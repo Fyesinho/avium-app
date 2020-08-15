@@ -90,7 +90,6 @@ export const postVisit = (payload) => {
             const {producer, field, quarter, labors, id} = payload;
             formData.append("producer_id", producer.value);
             formData.append("field_id", field.value);
-            formData.append("quarter_id", quarter.value);
             const time = moment(id).format("YYYY-MM-DD hh:mm:ss");
             formData.append("created_at", time);
             labors && labors.map((labor, index) => {
@@ -102,6 +101,7 @@ export const postVisit = (payload) => {
                 formData.append(`labors[${index}][comment]`, labor.comment);
                 formData.append(`labors[${index}][image]`, photo);
                 formData.append(`labors[${index}][labor_id]`, labor.labor.value);
+                formData.append(`labors[${index}][quarter_id]`, labor.quarter.value);
             })
             const response = await axios.post(visit, formData, {
                 headers: {

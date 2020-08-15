@@ -12,7 +12,6 @@ const styles = StyleSheet.create({
     },
     input: {
         // height: 50,
-        borderColor: '#ACACAC',
         borderWidth: 1,
         backgroundColor: '#f1f1f1',
         borderRadius: 5,
@@ -31,7 +30,7 @@ const styles = StyleSheet.create({
     }
 });
 
-const InputTextArea = ({placeholder, label, onChangeText, value}) => {
+const InputTextArea = ({placeholder, label, onChangeText, value, isError}) => {
     let [fontsLoaded] = useFonts(textRegular);
     if (!fontsLoaded) {
         return <Loading/>;
@@ -46,7 +45,7 @@ const InputTextArea = ({placeholder, label, onChangeText, value}) => {
                 value={value}
                 numberOfLines={7}
                 onChangeText={text => onChangeText(text)}
-                style={{...styles.input, fontFamily: 'Regular-text'}}
+                style={{...styles.input, fontFamily: 'Regular-text', borderColor: isError ? 'red' : '#ACACAC',}}
                 placeholder={placeholder}/>
         </View>
     );

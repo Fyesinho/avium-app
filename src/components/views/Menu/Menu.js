@@ -1,4 +1,5 @@
 import React from 'react';
+import {useSelector} from "react-redux";
 import {Image, StyleSheet, Text, View, TouchableOpacity} from "react-native";
 import {AntDesign, FontAwesome, MaterialCommunityIcons} from '@expo/vector-icons';
 import Title from "../../commons/Title/Title";
@@ -57,7 +58,7 @@ const iconSearch = <MaterialCommunityIcons name="file-document-box-search" size=
 const iconLogout = <MaterialCommunityIcons name="logout" size={24} color={primaryColor}/>;
 
 const Menu = ({setModalVisible}) => {
-
+    const user = useSelector(store => store.user.userData);
     let [fontsLoaded] = useFonts(textRegular);
     let [fontsLoaded2] = useFonts(textBold);
     if (!fontsLoaded || !fontsLoaded2) {
@@ -79,15 +80,15 @@ const Menu = ({setModalVisible}) => {
                         <Image
                             style={styles.tinyLogo}
                             source={{
-                                uri: 'https://reactnative.dev/img/tiny_logo.png',
+                                uri: user.image,
                             }}
                         />
                         <View style={{flexDirection: 'column', paddingLeft: 15}}>
                             <Text style={styles.textName}>
-                                Rodrigo Gonzalez
+                                {user.name}
                             </Text>
                             <Text style={styles.textJob}>
-                                Supervisor
+                                {user.position}
                             </Text>
                         </View>
                     </View>

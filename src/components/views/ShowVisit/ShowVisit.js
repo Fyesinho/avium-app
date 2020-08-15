@@ -29,21 +29,6 @@ const styles = StyleSheet.create({
     }
 });
 
-const bd = {
-    producer: 'Yo',
-    field: 'Campo 2',
-    quarter: 'Cuartel 2',
-    labors: [
-        {
-            name: 'Labor 1',
-            comment: 'Algun comentario que tenga las suficientes líneas para poder probar que esto se puede comportar como un textarea o simplemente cortara el texto en algún momento no indicado',
-            image: 'https://reactnative.dev/img/tiny_logo.png'
-        },
-        {name: 'Labor 2', comment: 'Algun comentario', image: 'https://reactnative.dev/img/tiny_logo.png'},
-        {name: 'Labor 3', comment: 'Algun comentario', image: 'https://reactnative.dev/img/tiny_logo.png'}
-    ]
-};
-
 const iconSync = <AntDesign name="sync" size={15} color={secondaryColor}/>;
 const iconEdit = <MaterialIcons name="edit" size={18} color={primaryColor}/>;
 
@@ -99,11 +84,12 @@ class ShowVisit extends Component {
                             <View style={styles.form}>
                                 <InputDisabled label={'Productor'} value={visit.producer && visit.producer.label}/>
                                 <InputDisabled label={'Campo'} value={visit.field && visit.field.label}/>
-                                <InputDisabled label={'Cuartel'} value={visit.quarter && visit.quarter.label}/>
+                                {/*<InputDisabled label={'Cuartel'} value={visit.quarter && visit.quarter.label}/>*/}
                                 {
                                     visit.labors && visit.labors.map((labor, index) => {
                                         return <View key={index}>
                                             <InputDisabled label={'Labor'} value={labor.labor && labor.labor.label}/>
+                                            <InputDisabled label={'Cuartel'} value={labor.quarter && labor.quarter.label}/>
                                             <InputDisabled label={'Comentarios'} value={labor.comment}/>
                                             <InputImageDisabled label={'Imagen labor'} uri={labor.image}/>
                                         </View>

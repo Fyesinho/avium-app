@@ -24,12 +24,13 @@ export const reducerCurrentVisit = visit => ({
             labor: {
                 label: labor.labor
             }
+            ,
+            quarter: {
+                label: labor.quarter
+            }
         }
     }),
     producer: {
         label: visit.producer
-    },
-    quarter: {
-        label: visit.quarter
     }
 });

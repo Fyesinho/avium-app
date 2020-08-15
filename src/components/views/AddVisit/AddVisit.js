@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {ScrollView, StyleSheet, View} from 'react-native';
+import {ScrollView, StyleSheet, View, Alert} from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 
 import HeaderShort from "../../commons/Headers/HeaderShort/HeaderShort";
@@ -51,19 +51,28 @@ const AddVisit = ({navigation}) => {
         })();
     }, [])
 
-
     const initialLabor = {
         labor: -1,
         comment: '',
-        image: ''
+        image: '',
+        quarter: -1,
+        errorLabor: false,
+        errorComment: false,
+        errorImage: false,
+        errorQuarter: false
     };
 
+    const [trys , setTry] = useState(1);
     const [producer, setProducer] = useState(-1);
     const [field, setField] = useState(-1);
     const [quarter, setQuarter] = useState(-1);
     const [labors, setLabors] = useState([initialLabor]);
 
+    const [producerError, setProducerError] = useState(false);
+    const [fieldError, setFieldError] = useState(false);
+
     const handlerProducer = async id => {
+        setProducerError(false)
         setProducer(id);
         setField(-1);
         setQuarter(-1);
@@ -73,6 +82,7 @@ const AddVisit = ({navigation}) => {
     }
 
     const handlerFields = async id => {
+        setFieldError(false)
         setField(id);
         setQuarter(-1);
         const quarters = await AsyncStorage.getItem(`@quarters`);
@@ -81,60 +91,96 @@ const AddVisit = ({navigation}) => {
     }
 
     const isValidForm = () => {
-        if (producer === -1) {
-            return false;
+        let boolFinal = true;
+        if (producer === -1 || producer === 0 || producer === undefined) {
+            setProducerError(true)
+            boolFinal =  false;
         }
-        if (field === -1) {
-            return false;
+        if (field === -1 || field === 0 || field === undefined) {
+            setFieldError(true)
+            boolFinal = false;
         }
         let bool = true;
-        labors.forEach(labor => {
+        for (const labor of labors) {
             if (labor.image === '') {
+                labor.errorImage = true;
                 bool = false;
             }
             if (labor.comment === '') {
+                labor.errorComment = true;
                 bool = false;
             }
-            if (labor.labor === -1) {
+            if (labor.labor === -1 || labor.labor === undefined) {
+                labor.errorLabor = true;
                 bool = false;
             }
-        })
-        if (bool === false) {
-            return false
+            if (labor.quarter === -1 || labor.quarter === undefined) {
+                labor.errorQuarter = true;
+                bool = false;
+            }
         }
-        return quarter !== -1;
+        if (bool === false) {
+            boolFinal = false
+        }
+        return boolFinal
     }
 
     const handlerOnPress = async () => {
-        const id = Date.now();
-        const structureResponse = {
-            producer: optionsProducer.find(object => object.value === producer),
-            field: optionsField.find(object => object.value === field),
-            quarter: optionsQuarter.find(object => object.value === quarter),
-            labors,
-            id,
-            sync: false
+        if(isValidForm()) {
+            const id = Date.now();
+            const structureResponse = {
+                producer: optionsProducer.find(object => object.value === producer),
+                field: optionsField.find(object => object.value === field),
+                labors,
+                id,
+                sync: false
+            }
+            try {
+                const jsonValue = JSON.stringify(structureResponse)
+                await AsyncStorage.setItem(`@visit-${id}`, jsonValue)
+                navigation.push('ShowVisit', {isSyncr: false, id, noBack: true})
+            } catch (e) {
+                alert('No se guardó la visita')
+            }
+        } else {
+            setTry(trys + 1);
+            Alert.alert('Error al guardar','Faltan datos para completar la visita. Se encuentran resaltados en el formulario')
         }
-        try {
-            const jsonValue = JSON.stringify(structureResponse)
-            await AsyncStorage.setItem(`@visit-${id}`, jsonValue)
-            navigation.push('ShowVisit', {isSyncr: false, id, noBack: true})
-        } catch (e) {
-            alert('No se guardó la visita')
-        }
+
     }
 
     const handlerLabor = (value, idx, field) => {
         setLabors(labors.map((labor, index) => {
+            if(field === 'labor') {
+                labor.errorLabor = false
+            }
+            if(field === 'image') {
+                labor.errorImage = false
+            }
+            if(field === 'comment') {
+                labor.errorComment = false
+            }
+            if(field === 'quarter') {
+                labor.errorQuarter = false
+            }
             if (index === idx) {
+                let response;
+                if (field === 'labor') {
+                    response = optionsLabor.find(object => object.value === value);
+                } else if (field === 'quarter') {
+                    response = optionsQuarter.find(object => object.value === value);
+                } else {
+                    response = value;
+                }
                 return {
                     ...labor,
-                    [field]: field === 'labor' ? optionsLabor.find(object => object.value === value) : value
+                    [field]: response
                 }
             }
             return {...labor};
         }));
     }
+
     return (
         <ScrollView style={styles.container}>
             <HeaderShort/>
@@ -146,51 +192,67 @@ const AddVisit = ({navigation}) => {
                     </Title>
                     <View style={styles.form}>
                         <InputSelect
+                            isError={producerError}
                             label={'Seleccionar productor'}
                             items={optionsProducer}
                             value={producer}
                             onValueChange={id => handlerProducer(id)}
                         />
                         <InputSelect
+                            isError={fieldError}
                             label={'Seleccionar Campo'}
                             items={optionsField}
                             value={field}
                             onValueChange={id => handlerFields(id)}
                         />
-                        <InputSelect
-                            label={'Seleccionar cuartel'}
-                            items={optionsQuarter}
-                            value={quarter}
-                            onValueChange={id => setQuarter(id)}
-                        />
                         {
-                            labors.map((labor, index) => <View key={index}>
-                                <Hr/>
-                                <InputSelect
-                                    label={'Seleccionar labor'}
-                                    items={optionsLabor}
-                                    value={labor.labor && labor.labor.value}
-                                    onValueChange={id => handlerLabor(id, index, 'labor')}
-                                />
-                                <InputTextArea
-                                    label={'Comentario'}
-                                    value={labor.comment}
-                                    onChangeText={text => handlerLabor(text, index, 'comment')}
-                                />
-                                <InputImage
-                                    label={'Agregar imagen'}
-                                    value={labor.image}
-                                    onChangeImage={image => handlerLabor(image, index, 'image')}
-                                />
-                            </View>)
+                            labors.map((labor, index) =>
+                                <View key={index} style={{
+                                    backgroundColor: index % 2 === 0 ? '#f3f3f3' : 'white',
+                                    marginLeft: -40,
+                                    marginRight: -40
+                                }}>
+                                    <Hr/>
+                                    <View style={{paddingLeft: 40, paddingRight: 40}}>
+                                        {labors.length > 1 &&
+                                        <ButtonLabor onPress={() => setLabors(labors.filter((laborI, indexI) => index !== indexI))}>
+                                            ELIMINAR LABOR
+                                        </ButtonLabor>}
+                                        <InputSelect
+                                            isError={labor.errorLabor}
+                                            label={'Seleccionar labor'}
+                                            items={optionsLabor}
+                                            value={labor.labor && labor.labor.value}
+                                            onValueChange={id => handlerLabor(id, index, 'labor')}
+                                        />
+                                        <InputSelect
+                                            isError={labor.errorQuarter}
+                                            label={'Seleccionar cuartel'}
+                                            items={optionsQuarter}
+                                            value={labor.quarter && labor.quarter.value}
+                                            onValueChange={id => handlerLabor(id, index, 'quarter')}
+                                        />
+                                        <InputTextArea
+                                            isError={labor.errorComment}
+                                            label={'Comentario'}
+                                            value={labor.comment}
+                                            onChangeText={text => handlerLabor(text, index, 'comment')}
+                                        />
+                                        <InputImage
+                                            isError={labor.errorImage}
+                                            label={'Agregar imagen'}
+                                            value={labor.image}
+                                            onChangeImage={image => handlerLabor(image, index, 'image')}
+                                        />
+                                    </View>
+                                </View>)
                         }
                         <ButtonLabor onPress={() => setLabors(labors.concat(initialLabor))}>
                             AGREGAR LABOR
                         </ButtonLabor>
                         <ButtonAvium onPress={() => handlerOnPress()}
                                      icon={iconAdd}
-                                     type={!isValidForm() ? 'disabled' : ''}
-                                     disabled={!isValidForm()}
+                                     type={'primary'}
                         >
                             Ingresar visita
                         </ButtonAvium>
